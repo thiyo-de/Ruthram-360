@@ -40,7 +40,7 @@ const WhyChooseUs = () => {
   ];
 
   return (
-    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-b from-gray-900 to-black scroll-mt-20">
+    <section className="py-12 sm:py-16 md:py-20 lg:py-24 bg-gradient-to-b scroll-mt-20">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16 items-center">
           {/* Left Side - Image/Video */}
@@ -51,7 +51,7 @@ const WhyChooseUs = () => {
             transition={{ duration: 0.8 }}
             className="relative"
           >
-            <div className="relative glass-card p-8 gradient-border">
+            <div className="relative glass-card p-8">
               <div className="aspect-video bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-xl flex items-center justify-center mb-6">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
@@ -61,7 +61,7 @@ const WhyChooseUs = () => {
                 </motion.div>
               </div>
               
-              <h3 className="text-2xl font-bold text-white mb-4">
+              <h3 className="text-2xl font-bold text-muted-foreground mb-4">
                 See Our Process in Action
               </h3>
               <p className="text-muted-foreground">
@@ -83,7 +83,7 @@ const WhyChooseUs = () => {
                   className="glass-card p-2 sm:p-3 md:p-4 text-center hover:shadow-glow transition-all duration-300"
                 >
                   <benefit.icon size={16} className="sm:w-5 sm:h-5 text-primary mx-auto mb-1 sm:mb-2" />
-                  <h4 className="text-white font-medium text-xs sm:text-sm">{benefit.title}</h4>
+                  <h4 className="text-muted-foreground font-medium text-xs sm:text-sm">{benefit.title}</h4>
                 </motion.div>
               ))}
             </div>
@@ -96,7 +96,7 @@ const WhyChooseUs = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground text-center mb-4 sm:mb-6">
               Why Choose <span className="text-gradient">Vision360</span>?
             </h2>
             
@@ -122,7 +122,7 @@ const WhyChooseUs = () => {
                   >
                     <Check size={16} className="text-white" />
                   </motion.div>
-                  <span className="text-white group-hover:text-primary transition-colors duration-300">
+                  <span className="text-muted-foreground group-hover:text-primary transition-colors duration-300">
                     {feature}
                   </span>
                 </motion.div>

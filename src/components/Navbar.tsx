@@ -9,10 +9,7 @@ const Navbar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -27,13 +24,14 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Top Navbar */}
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 backdrop-blur-md border-b border-white/10 ${
-          isScrolled 
-            ? 'glass' 
-            : 'bg-black/20'
+        className={`fixed top-0 left-0 right-0 z-50 ${
+          isScrolled
+            ? 'backdrop-blur-md border-b border-gray-200 bg-[hsl(var(--background))] lg:bg-transparent'
+            : 'bg-[hsl(var(--background))] lg:bg-transparent'
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
@@ -44,30 +42,35 @@ const Navbar = () => {
                 whileHover={{ scale: 1.05 }}
                 className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center"
               >
-                <span className="text-white font-bold text-xl">V</span>
+                <span className="text-gray-900 font-bold text-xl">V</span>
               </motion.div>
-              <span className="text-2xl font-bold text-white">Vision360</span>
+              <span className="text-2xl font-bold text-gray-900">Vision360</span>
             </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`relative text-white hover:text-primary transition-all duration-300 font-medium group ${
-                    location.pathname === link.path ? 'text-primary' : ''
-                  }`}
-                >
-                  {link.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-primary transition-all duration-300 ${
-                    location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const active = location.pathname === link.path;
+                return (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={`relative transition-all duration-300 font-medium group ${
+                      active ? 'text-primary' : 'text-gray-700 hover:text-primary'
+                    }`}
+                  >
+                    {link.name}
+                    <span
+                      className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-primary transition-all duration-300 ${
+                        active ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
             </div>
 
-            {/* CTA Button & Mobile Menu */}
+            {/* CTA Button & Mobile Toggle */}
             <div className="flex items-center space-x-4">
               <motion.a
                 href="#contact"
@@ -81,9 +84,12 @@ const Navbar = () => {
 
               {/* Mobile Menu Button */}
               <motion.button
+                aria-label="Toggle menu"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-menu"
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 text-white hover:text-primary transition-colors"
+                onClick={() => setIsMobileMenuOpen((s) => !s)}
+                className="lg:hidden p-2 text-gray-700 hover:text-primary transition-colors"
               >
                 {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
               </motion.button>
@@ -93,43 +99,50 @@ const Navbar = () => {
       </motion.nav>
 
       {/* Mobile Menu */}
+      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
+            id="mobile-menu"
             initial={{ opacity: 0, y: -100 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -100 }}
-            className={`fixed top-16 left-0 right-0 z-40 backdrop-blur-md border-b border-white/10 lg:hidden ${
-              isScrolled 
-                ? 'glass' 
-                : 'bg-black/20'
+            className={`fixed top-16 left-0 right-0 z-50 lg:hidden transition-all duration-300 ${
+              isScrolled
+                ? 'bg-[hsl(var(--background))] backdrop-blur-md border-b border-gray-200'
+                : 'bg-[hsl(var(--background))]'
             }`}
           >
             <div className="flex flex-col items-center py-8 space-y-6">
-              {navLinks.map((link, index) => (
-                <motion.div
-                  key={link.path}
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                >
-                  <Link
-                    to={link.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`text-lg font-light hover:text-primary transition-all duration-300 relative group ${
-                      location.pathname === link.path ? 'text-primary' : 'text-white'
-                    }`}
+              {navLinks.map((link, index) => {
+                const active = location.pathname === link.path;
+                return (
+                  <motion.div
+                    key={link.path}
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 }}
                   >
-                    {link.name}
-                    <span className={`absolute -bottom-2 left-1/2 transform -translate-x-1/2 h-1 bg-gradient-primary rounded-full transition-all duration-300 ${
-                      location.pathname === link.path ? 'w-8' : 'w-0 group-hover:w-6'
-                    }`}></span>
-                  </Link>
-                </motion.div>
-              ))}
-              
-              {/* CTA Button - Outside nav links */}
-              <div className="mt-8 pt-6 border-t border-white/20">
+                    <Link
+                      to={link.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`text-lg font-light transition-all duration-300 relative group ${
+                        active ? 'text-primary' : 'text-gray-700 hover:text-primary'
+                      }`}
+                    >
+                      {link.name}
+                      <span
+                        className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1 bg-gradient-primary rounded-full transition-all duration-300 ${
+                          active ? 'w-8' : 'w-0 group-hover:w-6'
+                        }`}
+                      />
+                    </Link>
+                  </motion.div>
+                );
+              })}
+
+              {/* CTA Button */}
+              <div className="mt-8 pt-6 border-t border-gray-200 w-full px-6">
                 <motion.a
                   href="#contact"
                   initial={{ opacity: 0, y: 50 }}

@@ -49,7 +49,7 @@ const AboutPage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black pt-24">
+    <div className="min-h-screen bg-gradient-to-b pt-24">
       {/* Hero Section */}
       <section className="py-24">
         <div className="container mx-auto px-6">
@@ -59,7 +59,7 @@ const AboutPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6">
               About <span className="text-gradient">Vision360</span>
             </h1>
               <p className="text-xl text-muted-foreground leading-relaxed mb-8">
@@ -76,12 +76,12 @@ const AboutPage = () => {
                   <div className="text-3xl font-bold text-primary">500+</div>
                   <div className="text-muted-foreground text-sm">Happy Clients</div>
                 </div>
-                <div className="w-px h-12 bg-white/20"></div>
+                <div className="w-px h-12 bg-gray-300"></div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-primary">5+</div>
                   <div className="text-muted-foreground text-sm">Years Experience</div>
                 </div>
-                <div className="w-px h-12 bg-white/20"></div>
+                <div className="w-px h-12 bg-gray-300"></div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-primary">98%</div>
                   <div className="text-muted-foreground text-sm">Satisfaction Rate</div>
@@ -95,11 +95,11 @@ const AboutPage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="glass-card gradient-border p-8">
+              <div className="glass-card p-8">
                 <div className="aspect-square bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-2xl flex items-center justify-center mb-6">
                   <Camera size={120} className="text-white/60" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">Our Mission</h3>
+                <h3 className="text-2xl font-bold text-muted-foreground mb-4">Our Mission</h3>
                 <p className="text-muted-foreground">
                   To revolutionize how businesses showcase their spaces through 
                   cutting-edge virtual tour technology, creating immersive experiences 
@@ -131,8 +131,8 @@ const AboutPage = () => {
                 whileHover={{ scale: 1.05 }}
                 className="glass-card text-center hover:shadow-glow transition-all duration-300"
               >
-                <stat.icon size={48} className="text-primary mx-auto mb-4" />
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">
+                <stat.icon size={45} className="text-primary mx-auto mb-4" />
+                <div className="text-3xl md:text-4xl font-bold text-muted-foreground mb-2">
                   {stat.number}
                 </div>
                 <div className="text-muted-foreground text-sm">{stat.label}</div>
@@ -152,7 +152,7 @@ const AboutPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-muted-foreground mb-6">
               Our <span className="text-gradient">Values</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -172,12 +172,12 @@ const AboutPage = () => {
                   scale: 1.05,
                   rotateY: 5,
                 }}
-                className="glass-card gradient-border hover:shadow-glow transition-all duration-500 text-center"
+                className="glass-card hover:shadow-glow transition-all duration-500 text-center"
               >
                 <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <value.icon size={32} className="text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-4">{value.title}</h3>
+                <h3 className="text-xl font-bold text-muted-foreground mb-4">{value.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {value.description}
                 </p>
@@ -197,7 +197,7 @@ const AboutPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              <h2 className="text-4xl md:text-5xl font-bold text-muted-foreground mb-6">
                 <span className="text-gradient">Certified</span> Excellence
               </h2>
               <p className="text-xl text-muted-foreground mb-8">
@@ -218,7 +218,7 @@ const AboutPage = () => {
                     <div className="w-6 h-6 bg-gradient-primary rounded-full flex items-center justify-center flex-shrink-0">
                       <Award size={16} className="text-white" />
                     </div>
-                    <span className="text-white group-hover:text-primary transition-colors duration-300">
+                    <span className="text-muted-foreground group-hover:text-primary transition-colors duration-300">
                       {cert}
                     </span>
                   </motion.div>
@@ -234,32 +234,32 @@ const AboutPage = () => {
               className="grid grid-cols-2 gap-6"
             >
               <div className="space-y-6">
-                <div className="glass-card p-6">
+                <div className="glass-card bg-white p-6">
                   <Globe size={48} className="text-primary mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Global Reach</h3>
+                  <h3 className="text-lg font-bold text-muted-foreground mb-2">Global Reach</h3>
                   <p className="text-muted-foreground text-sm">
                     Serving clients worldwide with consistent quality
                   </p>
                 </div>
-                <div className="glass-card p-6">
+                <div className="glass-card bg-white p-6">
                   <Zap size={48} className="text-primary mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Fast Delivery</h3>
+                  <h3 className="text-lg font-bold text-muted-foreground mb-2">Fast Delivery</h3>
                   <p className="text-muted-foreground text-sm">
                     48-hour turnaround on most projects
                   </p>
                 </div>
               </div>
               <div className="space-y-6 mt-12">
-                <div className="glass-card p-6">
+                <div className="glass-card bg-white p-6">
                   <Users size={48} className="text-primary mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Expert Team</h3>
+                  <h3 className="text-lg font-bold text-muted-foreground mb-2">Expert Team</h3>
                   <p className="text-muted-foreground text-sm">
                     Certified professionals with years of experience
                   </p>
                 </div>
-                <div className="glass-card p-6">
+                <div className="glass-card bg-white p-6">
                   <CheckCircle size={48} className="text-primary mb-4" />
-                  <h3 className="text-lg font-bold text-white mb-2">Guaranteed</h3>
+                  <h3 className="text-lg font-bold text-muted-foreground mb-2">Guaranteed</h3>
                   <p className="text-muted-foreground text-sm">
                     100% satisfaction guarantee on all work
                   </p>
@@ -279,7 +279,7 @@ const AboutPage = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-gradient mb-6">
               Ready to Work Together?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">

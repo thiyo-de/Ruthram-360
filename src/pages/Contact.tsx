@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Clock, 
+import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
   Send,
   CheckCircle,
   MessageSquare,
   Calendar,
   User,
-  Building
-} from 'lucide-react';
+  Building,
+} from "lucide-react";
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    company: '',
-    service: '',
-    project: '',
-    budget: '',
-    message: ''
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    service: "",
+    project: "",
+    budget: "",
+    message: "",
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -34,60 +34,64 @@ const ContactPage = () => {
     setTimeout(() => setIsSubmitted(false), 3000);
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData(prev => ({
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const contactInfo = [
     {
       icon: Mail,
-      label: 'Email Us',
-      value: 'hello@vision360.com',
-      link: 'mailto:hello@vision360.com'
+      label: "Email Us",
+      value: "hello@vision360.com",
+      link: "mailto:hello@vision360.com",
     },
     {
       icon: Phone,
-      label: 'Call Us',
-      value: '+1 (555) 123-4567',
-      link: 'tel:+15551234567'
+      label: "Call Us",
+      value: "+1 (555) 123-4567",
+      link: "tel:+15551234567",
     },
     {
       icon: MapPin,
-      label: 'Visit Us',
-      value: '123 Business Ave, City, State 12345',
-      link: '#'
+      label: "Visit Us",
+      value: "123 Business Ave, City, State 12345",
+      link: "#",
     },
     {
       icon: Clock,
-      label: 'Business Hours',
-      value: 'Mon-Fri: 9AM-6PM, Weekends: 10AM-4PM',
-      link: '#'
-    }
+      label: "Business Hours",
+      value: "Mon-Fri: 9AM-6PM, Weekends: 10AM-4PM",
+      link: "#",
+    },
   ];
 
   const services = [
-    'Virtual Tours',
-    'Google Street View',
-    'Real Estate Photography',
-    '360° Photography',
-    'Commercial Spaces',
-    'Hospitality Tours',
-    'Custom Solution'
+    "Virtual Tours",
+    "Google Street View",
+    "Real Estate Photography",
+    "360° Photography",
+    "Commercial Spaces",
+    "Hospitality Tours",
+    "Custom Solution",
   ];
 
   const budgetRanges = [
-    '$500 - $1,000',
-    '$1,000 - $2,500',
-    '$2,500 - $5,000',
-    '$5,000 - $10,000',
-    '$10,000+'
+    "$500 - $1,000",
+    "$1,000 - $2,500",
+    "$2,500 - $5,000",
+    "$5,000 - $10,000",
+    "$10,000+",
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-gray-900 to-black pt-24">
+    <div className="min-h-screen bg-gradient-to-b pt-24">
       {/* Hero Section */}
       <section className="py-24">
         <div className="container mx-auto px-6 text-center">
@@ -96,11 +100,11 @@ const ContactPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 px-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
               Get In <span className="text-gradient">Touch</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 px-4">
-              Ready to transform your space with immersive virtual experiences? 
+              Ready to transform your space with immersive virtual experiences?
               Let's discuss your project and create something amazing together.
             </p>
           </motion.div>
@@ -123,8 +127,9 @@ const ContactPage = () => {
                   Let's Start a Conversation
                 </h2>
                 <p className="text-muted-foreground leading-relaxed mb-8">
-                  Whether you need a quick quote or want to discuss a complex project, 
-                  we're here to help. Reach out using any of the methods below.
+                  Whether you need a quick quote or want to discuss a complex
+                  project, we're here to help. Reach out using any of the
+                  methods below.
                 </p>
               </div>
 
@@ -139,11 +144,11 @@ const ContactPage = () => {
                     whileHover={{ scale: 1.02, x: 5 }}
                     className="glass-card p-6 flex items-start space-x-4 hover:shadow-glow transition-all duration-300 group block"
                   >
-                    <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center flex-shrink-0 group-hover:animate-pulse-glow">
+                    <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
                       <info.icon size={24} className="text-white" />
                     </div>
                     <div>
-                      <h3 className="text-white font-semibold mb-1 group-hover:text-primary transition-colors">
+                      <h3 className="text-muted-foreground font-semibold mb-1 group-hover:text-primary transition-colors">
                         {info.label}
                       </h3>
                       <p className="text-muted-foreground text-sm leading-relaxed">
@@ -165,7 +170,7 @@ const ContactPage = () => {
                   <Calendar size={20} />
                   <span>Schedule a Call</span>
                 </motion.a>
-                
+
                 <motion.a
                   href="#"
                   whileHover={{ scale: 1.05 }}
@@ -185,15 +190,15 @@ const ContactPage = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="lg:col-span-2"
             >
-              <div className="glass-card gradient-border p-8">
-                <h2 className="text-2xl font-bold text-white mb-6">
+              <div className="glass-card p-8">
+                <h2 className="text-2xl font-bold text-muted-foreground mb-6">
                   Tell Us About Your Project
                 </h2>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-white font-medium mb-2">
+                      <label className="block text-muted-foreground font-medium mb-2">
                         <User size={16} className="inline mr-2" />
                         Full Name *
                       </label>
@@ -203,13 +208,13 @@ const ContactPage = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-muted-foreground/75 placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                         placeholder="Enter your full name"
                       />
                     </div>
-                    
+
                     <div>
-                      <label className="block text-white font-medium mb-2">
+                      <label className="block text-muted-foreground font-medium mb-2">
                         <Mail size={16} className="inline mr-2" />
                         Email Address *
                       </label>
@@ -219,7 +224,7 @@ const ContactPage = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -227,7 +232,7 @@ const ContactPage = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-white font-medium mb-2">
+                      <label className="block text-muted-foreground font-medium mb-2">
                         <Phone size={16} className="inline mr-2" />
                         Phone Number
                       </label>
@@ -236,13 +241,13 @@ const ContactPage = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                         placeholder="+1 (555) 123-4567"
                       />
                     </div>
-                    
+
                     <div>
-                      <label className="block text-white font-medium mb-2">
+                      <label className="block text-muted-foreground font-medium mb-2">
                         <Building size={16} className="inline mr-2" />
                         Company/Organization
                       </label>
@@ -251,7 +256,7 @@ const ContactPage = () => {
                         name="company"
                         value={formData.company}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                         placeholder="Your company name"
                       />
                     </div>
@@ -259,33 +264,45 @@ const ContactPage = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                     <div>
-                      <label className="block text-white font-medium mb-2">Service Needed</label>
+                      <label className="block text-muted-foreground font-medium mb-2">
+                        Service Needed
+                      </label>
                       <select
                         name="service"
                         value={formData.service}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-muted-foreground/75 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       >
                         <option value="">Select a service</option>
                         {services.map((service) => (
-                          <option key={service} value={service} className="bg-gray-900">
+                          <option
+                            key={service}
+                            value={service}
+                            className="bg-gray-900"
+                          >
                             {service}
                           </option>
                         ))}
                       </select>
                     </div>
-                    
+
                     <div>
-                      <label className="block text-white font-medium mb-2">Budget Range</label>
+                      <label className="block text-muted-foreground font-medium mb-2">
+                        Budget Range
+                      </label>
                       <select
                         name="budget"
                         value={formData.budget}
                         onChange={handleInputChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                        className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-muted-foreground/75 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       >
                         <option value="">Select budget range</option>
                         {budgetRanges.map((range) => (
-                          <option key={range} value={range} className="bg-gray-900">
+                          <option
+                            key={range}
+                            value={range}
+                            className="bg-gray-900"
+                          >
                             {range}
                           </option>
                         ))}
@@ -294,25 +311,29 @@ const ContactPage = () => {
                   </div>
 
                   <div>
-                    <label className="block text-white font-medium mb-2">Project Type</label>
+                    <label className="block text-muted-foreground font-medium mb-2">
+                      Project Type
+                    </label>
                     <input
                       type="text"
                       name="project"
                       value={formData.project}
                       onChange={handleInputChange}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
+                      className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all"
                       placeholder="e.g., Real estate listing, restaurant showcase, office tour"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-white font-medium mb-2">Project Details</label>
+                    <label className="block text-muted-foreground font-medium mb-2">
+                      Project Details
+                    </label>
                     <textarea
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
                       rows={5}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all resize-none"
+                      className="w-full bg-white/5 border border-gray-200 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:bg-white/10 transition-all resize-none"
                       placeholder="Tell us more about your project, timeline, specific requirements, or any questions you have..."
                     />
                   </div>
@@ -339,8 +360,11 @@ const ContactPage = () => {
 
                 <div className="mt-6 p-4 bg-primary/5 border border-primary/20 rounded-lg">
                   <p className="text-sm text-muted-foreground">
-                    <CheckCircle size={16} className="inline mr-2 text-primary" />
-                    We typically respond within 2 hours during business hours. 
+                    <CheckCircle
+                      size={16}
+                      className="inline mr-2 text-primary"
+                    />
+                    We typically respond within 2 hours during business hours.
                     For urgent requests, please call us directly.
                   </p>
                 </div>
@@ -360,11 +384,11 @@ const ContactPage = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-muted-foreground mb-6">
               Visit Our <span className="text-gradient">Studio</span>
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Located in the heart of the city, our studio is equipped with the 
+              Located in the heart of the city, our studio is equipped with the
               latest technology for virtual tour production.
             </p>
           </motion.div>
@@ -374,13 +398,17 @@ const ContactPage = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="glass-card gradient-border overflow-hidden"
+            className="glass-card overflow-hidden"
           >
             <div className="aspect-video bg-gradient-to-br from-primary/20 to-purple-600/20 flex items-center justify-center">
               <div className="text-center">
                 <MapPin size={64} className="text-white/60 mx-auto mb-4" />
-                <p className="text-white text-lg">Interactive Map Coming Soon</p>
-                <p className="text-muted-foreground">123 Business Ave, City, State 12345</p>
+                <p className="text-white text-lg">
+                  Interactive Map Coming Soon
+                </p>
+                <p className="text-muted-foreground">
+                  123 Business Ave, City, State 12345
+                </p>
               </div>
             </div>
           </motion.div>

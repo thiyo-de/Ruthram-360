@@ -1,31 +1,34 @@
-import { motion } from 'framer-motion';
-import { ArrowRight, Play } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ArrowRight, Play } from "lucide-react";
 
 const Hero = () => {
-  const words = ['Premium', 'Virtual', 'Tours', '&', 'Google', 'Street', 'View'];
+  const words = [
+    "Premium",
+    "Virtual",
+    "Tours",
+    "&",
+    "Google",
+    "Street",
+    "View",
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
     },
   };
 
   const wordVariants = {
     hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 }
+    visible: { opacity: 1, y: 0 },
   };
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-900 to-black">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(229,9,20,0.1),transparent)]" />
-      </div>
+      {/* Background (now light) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0">
@@ -37,10 +40,7 @@ const Hero = () => {
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
-            animate={{
-              y: [0, -30, 0],
-              opacity: [0.3, 1, 0.3],
-            }}
+            animate={{ y: [0, -30, 0], opacity: [0.3, 1, 0.3] }}
             transition={{
               duration: 3 + Math.random() * 2,
               repeat: Infinity,
@@ -66,9 +66,9 @@ const Hero = () => {
                   key={index}
                   variants={wordVariants}
                   className={`text-2xl sm:text-3xl md:text-4xl lg:text-7xl xl:text-8xl font-black text-center ${
-                    ['Premium', 'Virtual'].includes(word)
-                      ? 'text-gradient'
-                      : 'text-white'
+                    ["Premium", "Virtual"].includes(word)
+                      ? "text-gradient" // uses orange gradient from your index.css
+                      : "text-muted-foreground" // was text-white
                   }`}
                 >
                   {word}
@@ -83,8 +83,9 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4"
           >
-            Transform your business with immersive 360° experiences. Professional virtual tours 
-            that showcase your space like never before.
+            Transform your business with immersive 360° experiences.
+            Professional virtual tours that showcase your space like never
+            before.
           </motion.p>
 
           {/* CTAs */}
@@ -119,45 +120,49 @@ const Hero = () => {
             className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mt-12 sm:mt-16 md:mt-20 px-4"
           >
             {[
-              { number: '500+', label: 'Tours Created' },
-              { number: '98%', label: 'Client Satisfaction' },
-              { number: '24/7', label: 'Support Available' },
+              { number: "500+", label: "Tours Created" },
+              { number: "98%", label: "Client Satisfaction" },
+              { number: "24/7", label: "Support Available" },
             ].map((stat, index) => (
               <motion.div
                 key={index}
                 variants={wordVariants}
                 transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
                 className="glass-card text-center hover:scale-105 transition-transform duration-300 p-4 sm:p-6"
+                style={{ backgroundColor: "#F5F7F9" }}
               >
                 <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">
                   {stat.number}
                 </div>
-                <div className="text-muted-foreground text-sm sm:text-base">{stat.label}</div>
+                <div className="text-muted-foreground text-sm sm:text-base">
+                  {stat.label}
+                </div>
               </motion.div>
             ))}
           </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center"
-        >
-          <motion.div
-            animate={{ y: [0, 16, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-1 h-3 bg-primary rounded-full mt-2"
-          />
-        </motion.div>
-      </motion.div>
+  {/* Scroll Indicator */}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.2 }}
+  className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+>
+  <motion.div
+    animate={{ y: [0, 10, 0] }}
+    transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+    className="w-6 h-10 border-2 rounded-full flex justify-center items-start border-[hsl(var(--foreground)_/_0.25)]"
+  >
+    <motion.div
+      animate={{ y: [0, 18, 0] }}
+      transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+      className="w-1 h-3 bg-primary rounded-full mt-1"
+    />
+  </motion.div>
+</motion.div>
+
     </section>
   );
 };

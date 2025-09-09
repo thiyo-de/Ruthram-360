@@ -37,7 +37,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-t from-black via-gray-900 to-black border-t border-white/10">
+    <footer className="relative bg-gradient-to-t glass-card border-white/10">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(229,9,20,0.1),transparent)]" />
@@ -87,7 +87,7 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <h3 className="text-xl font-bold text-white mb-6">Quick Links</h3>
+            <h3 className="text-xl font-bold text-muted-foreground mb-6">Quick Links</h3>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.path}>
@@ -112,7 +112,7 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h3 className="text-xl font-bold text-white mb-6">Services</h3>
+            <h3 className="text-xl font-bold text-muted-foreground mb-6">Services</h3>
             <ul className="space-y-3">
               {services.map((service) => (
                 <li key={service}>
@@ -131,7 +131,7 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h3 className="text-xl font-bold text-white mb-6">Stay Connected</h3>
+            <h3 className="text-xl font-bold text-muted-foreground mb-6">Stay Connected</h3>
             
             <p className="text-muted-foreground mb-4">
               Subscribe to our newsletter for tips, updates, and special offers.
@@ -141,7 +141,7 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 bg-white/5 border border-white/10 rounded-l-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
+                className="flex-1 bg-white/5 border border-black/10 rounded-l-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-primary transition-colors"
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}

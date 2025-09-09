@@ -57,7 +57,7 @@ const Services = () => {
   };
 
   return (
-    <section id="services" className="py-24 bg-gradient-to-b from-black to-gray-900 scroll-mt-20">
+    <section id="services" className="py-24 bg-gradient-to-b scroll-mt-20">
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -66,7 +66,7 @@ const Services = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12 sm:mb-16 px-4"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold text-muted-foreground mb-4 sm:mb-6">
             Our <span className="text-gradient">Services</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -90,13 +90,13 @@ const Services = () => {
                 scale: 1.05,
                 rotateY: 5,
               }}
-              className="glass-card gradient-border hover:shadow-glow transition-all duration-500 group"
+              className="glass-card hover:shadow-glow transition-all duration-500 group"
             >
               <div className="mb-4 sm:mb-6">
-                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-primary rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 group-hover:animate-pulse-glow transition-all duration-300">
-                  <service.icon size={24} className="sm:w-8 sm:h-8 text-white" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-primary rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-4 transition-all duration-300">
+                  <service.icon size={24} className="sm:w-6 sm:h-6 text-white" />
                 </div>
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3">{service.title}</h3>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gradient mb-2 sm:mb-3">{service.title}</h3>
                 <p className="text-muted-foreground leading-relaxed text-sm sm:text-base">
                   {service.description}
                 </p>
