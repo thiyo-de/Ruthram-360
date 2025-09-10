@@ -10,6 +10,7 @@ import {
   MapPin,
   Camera
 } from 'lucide-react';
+import Logo from '../Assets/Logo.svg';
 
 const Footer = () => {
   const quickLinks = [
@@ -53,10 +54,10 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
           >
             <div className="flex items-center space-x-2 mb-6">
-              <div className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center">
-                <Camera size={24} className="text-white" />
+              <div className="w-10 h-10 flex items-center justify-center">
+                 <img src={Logo} alt="Logo" />
               </div>
-              <span className="text-2xl font-bold text-white">Vision360</span>
+              <span className="text-2xl font-bold text-muted-foreground">Ruthram360°</span>
             </div>
             
             <p className="text-muted-foreground mb-6 leading-relaxed">

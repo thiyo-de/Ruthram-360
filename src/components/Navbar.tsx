@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Logo from '../Assets/Logo.svg';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -40,11 +41,14 @@ const Navbar = () => {
             <Link to="/" className="flex items-center space-x-2">
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="w-10 h-10 bg-gradient-primary rounded-lg flex items-center justify-center"
+                className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 flex items-center justify-center"
               >
-                <span className="text-gray-900 font-bold text-xl">V</span>
+                <img src={Logo} alt="Logo" />
               </motion.div>
-              <span className="text-2xl font-bold text-gray-900">Vision360</span>
+              {/* Smaller on sm/md, larger on lg */}
+              <span className="font-semibold text-gray-600 text-base sm:text-lg md:text-xl lg:text-2xl">
+                Ruthram360°
+              </span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -55,7 +59,7 @@ const Navbar = () => {
                   <Link
                     key={link.path}
                     to={link.path}
-                    className={`relative transition-all duration-300 font-medium group ${
+                    className={`relative transition-all duration-300 font-medium group text-sm sm:text-base md:text-lg ${
                       active ? 'text-primary' : 'text-gray-700 hover:text-primary'
                     }`}
                   >
@@ -99,7 +103,6 @@ const Navbar = () => {
       </motion.nav>
 
       {/* Mobile Menu */}
-      {/* Mobile Menu */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -126,7 +129,7 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`text-lg font-light transition-all duration-300 relative group ${
+                      className={`font-light transition-all duration-300 relative group text-base sm:text-lg md:text-xl ${
                         active ? 'text-primary' : 'text-gray-700 hover:text-primary'
                       }`}
                     >
