@@ -1,9 +1,16 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
-import BG from "../Assets/bg.jpg";
 
 const Hero = () => {
-  const words = ["Premium", "Virtual", "Tours", "&", "Google", "Street", "View"];
+  const words = [
+    "Premium",
+    "Virtual",
+    "Tours",
+    "&",
+    "Google",
+    "Street",
+    "View",
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -20,24 +27,8 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${BG})`,
-        }}
-      />
-
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/90" />
-
-      {/* Texture overlay (subtle dots pattern) */}
-      <div
-        className="absolute inset-0 opacity-40 mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
+      {/* Background (now light) */}
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background to-background"></div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0">
@@ -76,8 +67,8 @@ const Hero = () => {
                   variants={wordVariants}
                   className={`text-2xl sm:text-3xl md:text-4xl lg:text-7xl xl:text-8xl font-black text-center ${
                     ["Premium", "Virtual"].includes(word)
-                      ? "text-gradient"
-                      : "text-muted-foreground"
+                      ? "text-gradient" // uses orange gradient from your index.css
+                      : "text-muted-foreground" // was text-white
                   }`}
                 >
                   {word}
@@ -92,8 +83,9 @@ const Hero = () => {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-8 sm:mb-10 md:mb-12 max-w-3xl mx-auto leading-relaxed px-4"
           >
-            Transform your business with immersive 360° experiences. Professional
-            virtual tours that showcase your space like never before.
+            Transform your business with immersive 360° experiences.
+            Professional virtual tours that showcase your space like never
+            before.
           </motion.p>
 
           {/* CTAs */}
@@ -151,35 +143,26 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
-      >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{
-            duration: 1.8,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          }}
-          className="w-6 h-10 border-2 rounded-full flex justify-center items-start border-[hsl(var(--foreground)_/_0.25)]"
-        >
-          <motion.div
-            animate={{ y: [0, 18, 0] }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              repeatType: "loop",
-              ease: "easeInOut",
-            }}
-            className="w-1 h-3 bg-primary rounded-full mt-1"
-          />
-        </motion.div>
-      </motion.div>
+  {/* Scroll Indicator */}
+<motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 1.2 }}
+  className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+>
+  <motion.div
+    animate={{ y: [0, 10, 0] }}
+    transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+    className="w-6 h-10 border-2 rounded-full flex justify-center items-start border-[hsl(var(--foreground)_/_0.25)]"
+  >
+    <motion.div
+      animate={{ y: [0, 18, 0] }}
+      transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
+      className="w-1 h-3 bg-primary rounded-full mt-1"
+    />
+  </motion.div>
+</motion.div>
+
     </section>
   );
 };

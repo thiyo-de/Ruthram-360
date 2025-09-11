@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Play } from "lucide-react";
-import BG from "../Assets/bg.jpg";
 
 const Hero = () => {
   const words = ["Premium", "Virtual", "Tours", "&", "Google", "Street", "View"];
@@ -20,24 +19,30 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${BG})`,
-        }}
-      />
+      {/* Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster="https://images.unsplash.com/photo-1529429612776-c8c6ae0482c1?q=80&w=1920&auto=format&fit=crop"
+      >
+        {/* Provide multiple formats for better support */}
+        <source
+          src="https://videos.pexels.com/video-files/3130284/3130284-uhd_2560_1440_25fps.mp4"
+          type="video/mp4"
+        />
+        <source
+          src="https://storage.coverr.co/videos/coverr-city-skyline-8049/1080p.webm"
+          type="video/webm"
+        />
+      </video>
 
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/90" />
-
-      {/* Texture overlay (subtle dots pattern) */}
-      <div
-        className="absolute inset-0 opacity-40 mix-blend-overlay"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E")`,
-        }}
-      />
+      {/* Soft overlay for readability */}
+      <div className="absolute inset-0 bg-white/70 md:bg-white/65 backdrop-blur-[1px]" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/70" />
 
       {/* Floating Elements */}
       <div className="absolute inset-0">
@@ -160,22 +165,12 @@ const Hero = () => {
       >
         <motion.div
           animate={{ y: [0, 10, 0] }}
-          transition={{
-            duration: 1.8,
-            repeat: Infinity,
-            repeatType: "loop",
-            ease: "easeInOut",
-          }}
+          transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
           className="w-6 h-10 border-2 rounded-full flex justify-center items-start border-[hsl(var(--foreground)_/_0.25)]"
         >
           <motion.div
             animate={{ y: [0, 18, 0] }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              repeatType: "loop",
-              ease: "easeInOut",
-            }}
+            transition={{ duration: 1.8, repeat: Infinity, repeatType: "loop", ease: "easeInOut" }}
             className="w-1 h-3 bg-primary rounded-full mt-1"
           />
         </motion.div>
