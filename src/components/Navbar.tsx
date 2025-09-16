@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Calendar } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import Logo from '../Assets/Logo.svg';
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Calendar } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import Logo from "../Assets/Logo.svg";
+const MotionLink = motion(Link);
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -11,16 +12,16 @@ const Navbar = () => {
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: 'Portfolio', path: '/portfolio' },
-    { name: 'About', path: '/about' },
-    { name: 'Contact', path: '/contact' },
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: "Portfolio", path: "/portfolio" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
   ];
 
   return (
@@ -31,8 +32,8 @@ const Navbar = () => {
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 ${
           isScrolled
-            ? 'backdrop-blur-md border-b border-gray-200 bg-[hsl(var(--background))] lg:bg-transparent'
-            : 'bg-[hsl(var(--background))] lg:bg-transparent'
+            ? "backdrop-blur-md border-b border-gray-200 bg-[hsl(var(--background))] lg:bg-transparent"
+            : "bg-[hsl(var(--background))] lg:bg-transparent"
         }`}
       >
         <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4">
@@ -60,13 +61,15 @@ const Navbar = () => {
                     key={link.path}
                     to={link.path}
                     className={`relative transition-all duration-300 font-medium group text-sm sm:text-base md:text-lg ${
-                      active ? 'text-primary' : 'text-gray-700 hover:text-primary'
+                      active
+                        ? "text-primary"
+                        : "text-gray-700 hover:text-primary"
                     }`}
                   >
                     {link.name}
                     <span
                       className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-primary transition-all duration-300 ${
-                        active ? 'w-full' : 'w-0 group-hover:w-full'
+                        active ? "w-full" : "w-0 group-hover:w-full"
                       }`}
                     />
                   </Link>
@@ -75,16 +78,17 @@ const Navbar = () => {
             </div>
 
             {/* CTA Button & Mobile Toggle */}
+
             <div className="flex items-center space-x-4">
-              <motion.a
-                href="#contact"
+              <MotionLink
+                to="/contact" // ✅ use route path instead of href
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="btn-primary hidden xl:flex items-center space-x-2"
               >
                 <Calendar size={20} />
                 <span>Book Appointment</span>
-              </motion.a>
+              </MotionLink>
 
               {/* Mobile Menu Button */}
               <motion.button
@@ -112,8 +116,8 @@ const Navbar = () => {
             exit={{ opacity: 0, y: -100 }}
             className={`fixed top-16 left-0 right-0 z-50 lg:hidden transition-all duration-300 ${
               isScrolled
-                ? 'bg-[hsl(var(--background))] backdrop-blur-md border-b border-gray-200'
-                : 'bg-[hsl(var(--background))]'
+                ? "bg-[hsl(var(--background))] backdrop-blur-md border-b border-gray-200"
+                : "bg-[hsl(var(--background))]"
             }`}
           >
             <div className="flex flex-col items-center py-8 space-y-6">
@@ -130,13 +134,15 @@ const Navbar = () => {
                       to={link.path}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={`font-light transition-all duration-300 relative group text-base sm:text-lg md:text-xl ${
-                        active ? 'text-primary' : 'text-gray-700 hover:text-primary'
+                        active
+                          ? "text-primary"
+                          : "text-gray-700 hover:text-primary"
                       }`}
                     >
                       {link.name}
                       <span
                         className={`absolute -bottom-2 left-1/2 -translate-x-1/2 h-1 bg-gradient-primary rounded-full transition-all duration-300 ${
-                          active ? 'w-8' : 'w-0 group-hover:w-6'
+                          active ? "w-8" : "w-0 group-hover:w-6"
                         }`}
                       />
                     </Link>
@@ -145,9 +151,10 @@ const Navbar = () => {
               })}
 
               {/* CTA Button */}
+
               <div className="mt-8 pt-6 border-t border-gray-200 w-full px-6">
-                <motion.a
-                  href="#contact"
+                <MotionLink
+                  to="/contact" // ✅ route path instead of href
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
@@ -156,7 +163,7 @@ const Navbar = () => {
                 >
                   <Calendar size={20} />
                   <span>Book Appointment</span>
-                </motion.a>
+                </MotionLink>
               </div>
             </div>
           </motion.div>

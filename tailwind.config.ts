@@ -18,7 +18,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        satoshi: ["Satoshi", "system-ui", "sans-serif"],
+        heading: ["'Space Grotesk'", "system-ui", "sans-serif"], // For h1–h6
+        satoshi: ["'Satoshi'", "system-ui", "sans-serif"], // For body text
       },
       colors: {
         border: "hsl(var(--border))",
@@ -73,7 +74,10 @@ export default {
       keyframes: {
         "accordion-down": {
           from: { height: "0", opacity: "0" },
-          to: { height: "var(--radix-accordion-content-height)", opacity: "1" },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+            opacity: "1",
+          },
         },
         "accordion-up": {
           from: {

@@ -1,0 +1,189 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Vision360 Premium Design System — Light + Orange
+   All colors are HSL tokens so Tailwind utilities update globally. */
+
+@layer base {
+  :root {
+    /* Core Colors */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+
+    --card: 220 23% 97%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    /* Brand (Orange highlight) — Hex #FF4D01 -> HSL ≈ 18 100% 50% */
+    --orange: 18 100% 50%;
+    --orange-glow: 18 100% 58%;
+    --orange-dark: 18 100% 40%;
+    /* optional: keep hex for non-HSL uses (e.g., box-shadows) */
+    --orange-hex: #FF4D01;
+
+    --primary: var(--orange);
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: var(--orange-glow);
+
+    --secondary: 0 0% 95%;
+    --secondary-foreground: 0 0% 0%;
+
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
+
+    --accent: var(--orange);
+    --accent-foreground: 0 0% 100%;
+
+    /* Gradients (use tokens, not hard-coded hues) */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    /* optional 2nd primary gradient (kept for compatibility) */
+    --gradient-primary-2ND: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--orange-dark)));
+    --gradient-border: linear-gradient(135deg, hsl(var(--primary) / 0.6), hsl(var(--orange-dark) / 0.6));
+    --gradient-glass: linear-gradient(135deg, hsl(0 0% 0% / 0.05), hsl(0 0% 0% / 0.02));
+
+    /* Glass Effects */
+    --glass-bg: hsl(0 0% 0% / 0.03);
+    --glass-border: hsl(0 0% 0% / 0.08);
+    --glass-shadow: 0 8px 32px hsl(0 0% 0% / 0.08);
+
+    /* Shadows */
+    --shadow-elegant: 0 20px 40px -10px hsl(0 0% 0% / 0.15);
+
+    /* Borders & Inputs */
+    --border: hsl(0 0% 90%);
+    --input: hsl(0 0% 96%);
+    --ring: hsl(var(--primary));
+
+    /* Motion + Radius */
+    --hover-scale: 1.05;
+    --hover-tilt: 2deg;
+    --radius: 12px;
+
+    /* Sidebar tokens (optional) */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: var(--orange);
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: var(--orange);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  /* Typography baseline */
+  body {
+    @apply bg-background text-foreground font-satoshi antialiased overflow-x-hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold tracking-tight;
+    letter-spacing: -0.02em;
+  }
+
+  /* Modern Scrollbar (light, no glow) */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: hsl(0 0% 96%); }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--orange-dark)));
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, hsl(var(--primary-glow)), hsl(var(--primary)));
+  }
+
+  /* Firefox */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--primary)) hsl(0 0% 96%);
+  }
+}
+
+@layer components {
+  .glass {
+    @apply backdrop-blur-md border rounded-xl;
+    background: var(--glass-bg);
+    border-color: var(--glass-border);
+  }
+
+  .glass-card {
+    @apply rounded-2xl p-6;
+    background: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .gradient-border {
+    position: relative;
+    border-radius: 12px;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    background: var(--gradient-border);
+    border-radius: inherit;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    -webkit-mask-composite: xor;
+  }
+
+  .text-gradient {
+    background-image: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-primary {
+    @apply text-white font-heading font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105;
+    background-image: linear-gradient(180deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+  }
+
+  .btn-glass {
+    @apply font-satoshi font-medium px-8 py-4 rounded-xl transition-all duration-300 hover:scale-105;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: hsl(var(--foreground));
+  }
+  .btn-glass:hover { background: hsl(0 0% 0% / 0.05); }
+
+  /* ==========================
+     Glass Prism (card-style)
+     ========================== */
+  .glass-prism {
+    @apply backdrop-blur-xl rounded-2xl relative;
+    background: hsl(0 0% 100% / 0.15);
+    border: 1px solid hsl(0 0% 100% / 0.25);
+    box-shadow: 0 4px 30px hsl(0 0% 0% / 0.1);
+  }
+
+  /* Hero heading utility */
+  .heading-hero {
+    @apply font-heading font-black leading-none tracking-tight
+           text-[26px] sm:text-[34px] md:text-[44px] lg:text-[68px] xl:text-[80px];
+  }
+
+  /* ==========================
+     Glass Prism Background (overlay)
+     Blur is controllable via --glass-blur (default 24px)
+     ========================== */
+  .glass-prism-bg {
+    @apply relative;
+    background: hsl(0 0% 100% / 0.15);
+    -webkit-backdrop-filter: blur(var(--glass-blur, 24px));
+    backdrop-filter: blur(var(--glass-blur, 3px));
+  }
+}

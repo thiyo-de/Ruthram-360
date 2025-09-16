@@ -7,6 +7,8 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, X, Check } from "lucide-react";
+import Service_BG from "../Assets/Service.jpg";
+import Blog from "@/components/blog";
 
 /* ---------- Client Logos (replace with your assets as needed) ---------- */
 import AU from "../Assets/Alagappa.png";
@@ -988,19 +990,61 @@ const PortfolioPage = () => {
     : filteredProjects;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background pt-24">
+    <div className="min-h-screen">
       {/* Hero */}
-      <section className="py-24">
+
+      <section className="relative pt-48 sm:pt-44 md:pt-48 pb-16 sm:pb-20 md:pb-24 overflow-hidden">
+        {/* Local CSS for the grid texture (denser + higher contrast) */}
+        <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Local CSS for the hero grid texture */
+        .hero-grid {
+          background-image:
+            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
+          background-size: 48px 48px;
+        }
+      `}</style>
+
+        {/* Background layers (behind content) */}
+        <div className="absolute inset-0 -z-10">
+          {/* Base image (use any; this one is just to validate contrast) */}
+          <img
+            src=""
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+
+          {/* Theme-aware overlay with slight blur */}
+          <div
+            className="absolute inset-0 bg-background/75 backdrop-blur-[5px]"
+            style={{ willChange: "filter" }}
+          />
+
+          {/* Subtle grid texture (now stronger/denser) */}
+          <div className="absolute inset-0 z-0 hero-grid pointer-events-none" />
+
+          {/* Bottom fade (theme-aware) */}
+          <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-background" />
+        </div>
+
         <div className="container mx-auto px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
-              Our <span className="text-gradient">Portfolio</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight text-muted-foreground mb-6 px-4">
+              <span className="inline-block md:whitespace-nowrap">
+                Our <span className="text-gradient">Portfolio</span>
+              </span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 px-4">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-0 px-4">
               Explore our collection of immersive virtual experiences. Each
               project tells a unique story and showcases our commitment to
               excellence.
@@ -1054,52 +1098,77 @@ const PortfolioPage = () => {
                 <motion.div
                   key={`${project.id}-${idx}`}
                   layout
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="glass-card group cursor-pointer overflow-hidden"
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  whileHover={{ scale: 1.02 }}
                   onClick={() => setSelectedProject(project)}
+                  onKeyDown={(e) =>
+                    (e.key === "Enter" || e.key === " ") &&
+                    setSelectedProject(project)
+                  }
+                  role="button"
+                  tabIndex={0}
+                  className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
-                  {/* IMAGE AREA */}
-                  <div className="relative aspect-video mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-purple-600/20">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "https://via.placeholder.com/600x400.png?text=Image";
-                      }}
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+                  {/* background image */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "https://via.placeholder.com/800x600.png?text=Preview";
+                    }}
+                  />
+
+                  {/* gradient overlay (no blur) */}
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_-10%,rgba(0,0,0,0.35),transparent_60%)]" />
                   </div>
 
-                  {/* TEXT AREA */}
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-gradient mb-2 transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium mb-2">
-                        {project.category}
-                      </p>
-                      <p className="text-muted-foreground/75 text-sm leading-relaxed">
-                        {project.description}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground/75">
+                  {/* content pinned to bottom */}
+                  <div className="relative z-[1] p-3.5 sm:p-4 md:p-5 flex flex-col justify-end h-full text-white">
+                    {/* Title */}
+                    <h3 className="text-[15px] sm:text-base md:text-lg font-semibold leading-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.45)]">
+                      {project.title}
+                    </h3>
+
+                    {/* Description (tighter + 2 lines) */}
+                    <p className="mt-1 text-[11px] sm:text-[12px] text-white/90 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    {/* Glassmorphism chips (reduced height) */}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
+                        {project.client}
+                      </span>
+                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
                         {project.completedDate}
                       </span>
-                      <ExternalLink
-                        size={16}
-                        className="text-primary group-hover:translate-x-1 transition-transform"
-                        aria-hidden="true"
-                      />
                     </div>
+
+                    {/* bottom row (compact) */}
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-[10px] sm:text-[11px] text-white/80">
+                        {project.category}
+                      </span>
+
+                      {/* small faux CTA; card handles click */}
+                      <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white text-neutral-900 text-[11px] sm:text-[12px] font-medium shadow-md group-hover:shadow-lg transition-shadow">
+                        View details
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* reduced overall height: less portraity aspect */}
+                  <div className="invisible pointer-events-none select-none">
+                    {/* was aspect-[4/5]; now shorter */}
+                    <div className="aspect-[5/4] sm:aspect-[4/3]" />
                   </div>
                 </motion.div>
               ))}
@@ -1123,13 +1192,52 @@ const PortfolioPage = () => {
         </div>
       </section>
 
+      <Blog />
+
       {/* Our Clients */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-5xl font-bold text-center text-foreground mb-10">
-            Our Clients
-          </h2>
+          {/* Section header */}
 
+          <div className="text-center mb-10 sm:mb-12">
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              {/* Left triple bars – visible on all sizes */}
+              <motion.div
+                initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                aria-hidden="true"
+              >
+                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
+              </motion.div>
+
+              {/* Title */}
+              <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
+                <span>Our&nbsp;</span>
+                <span className="text-gradient">Clients</span>
+              </h2>
+
+              {/* Right triple bars – visible on all sizes */}
+              <motion.div
+                initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
+                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                aria-hidden="true"
+              >
+                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Logos marquee */}
           <Marquee
             items={clients}
             cardClass="bg-white p-4 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-glow"
