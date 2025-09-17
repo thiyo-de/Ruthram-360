@@ -83,7 +83,7 @@ const allServices: Service[] = [
     description:
       "Professional Google Street View imagery to boost your local search presence and discovery.",
     features: [
-      "Google Certified",
+      "Google Standard",
       "SEO Benefits",
       "Local Discovery",
       "Business Listings",
@@ -108,7 +108,7 @@ const allServices: Service[] = [
     features: [
       "Planned & compliant flights",
       "Cinematic paths",
-      "5.7K/8K Exports",
+      "5.7K Exports",
     ],
     image: DRONE,
   },
@@ -844,7 +844,7 @@ const Services = () => {
                 <div>
                   <h3
                     id="svc-dialog-title"
-                    className="text-xl font-bold text-foreground"
+                    className="text-xl font-bold text-muted-foreground"
                   >
                     {selected.title}
                   </h3>

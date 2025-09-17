@@ -1,6 +1,6 @@
 // src/pages/blog.tsx
 import React, { useId, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, easeOut } from "framer-motion"; // ✅ added easeOut
 import { Plus, Minus } from "lucide-react";
 
 type Post = {
@@ -58,21 +58,20 @@ const posts: Post[] = [
 
 export default function Blog() {
   const [openId, setOpenId] = useState<number | null>(posts[0]?.id ?? null);
-  const headingId = useId(); // stable for aria-labelledby on the list
+  const headingId = useId();
 
   return (
     <section className="bg-[#f8f9fb] dark:bg-background">
       <div className="container mx-auto max-w-4xl px-6 py-12 sm:py-16">
         {/* === Header === */}
-
         <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <div className="flex items-center justify-center gap-2 sm:gap-3 text-center">
-            {/* Left triple bars – visible on all sizes, no shrink */}
+            {/* Left triple bars */}
             <motion.div
               initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
               whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
               viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
+              transition={{ duration: 0.45, ease: easeOut }} // ✅ fixed
               className="flex shrink-0 items-center gap-1.5 sm:gap-2"
               aria-hidden="true"
             >
@@ -81,7 +80,6 @@ export default function Blog() {
               <span className="block w-0.5 min-w-[2px] h-7 sm:h-8 md:h-9 bg-foreground/10 rounded-full" />
             </motion.div>
 
-            {/* Title */}
             <h2
               id={headingId}
               className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground"
@@ -89,12 +87,12 @@ export default function Blog() {
               <span className="text-gradient">FAQ</span>
             </h2>
 
-            {/* Right triple bars – visible on all sizes, no shrink */}
+            {/* Right triple bars */}
             <motion.div
               initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
               whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
               viewport={{ once: true, amount: 0.6 }}
-              transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
+              transition={{ duration: 0.45, ease: easeOut }} // ✅ fixed
               className="flex shrink-0 items-center gap-1.5 sm:gap-2"
               aria-hidden="true"
             >
@@ -104,13 +102,12 @@ export default function Blog() {
             </motion.div>
           </div>
 
-          {/* Subtitle */}
           <p className="mt-3 sm:mt-4 text-sm sm:text-base md:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
             Frequently asked questions
           </p>
         </div>
 
-        {/* === FAQ / Accordion list === */}
+        {/* === FAQ Accordion === */}
         <div
           className="space-y-3 sm:space-y-4"
           role="list"
@@ -127,7 +124,7 @@ export default function Blog() {
                 role="listitem"
                 className="rounded-2xl bg-white dark:bg-card ring-1 ring-neutral-200 dark:ring-neutral-800 shadow-none overflow-hidden"
               >
-                {/* Row header */}
+                {/* Header Row */}
                 <button
                   id={buttonId}
                   type="button"
@@ -136,7 +133,7 @@ export default function Blog() {
                   onClick={() => setOpenId(isOpen ? null : post.id)}
                   className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-3.5 sm:py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50 rounded-2xl"
                 >
-                  <span className="text-[15px] font-heading sm:text-base md:text-lg font-medium text-neutral-900 dark:text-neutral-100">
+                  <span className="text-[15px] font-heading sm:text-base md:text-lg font-medium text-muted-foreground dark:text-neutral-100">
                     {post.title}
                   </span>
                   <span
@@ -161,10 +158,10 @@ export default function Blog() {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.22, ease: "easeOut" }}
+                      transition={{ duration: 0.22, ease: easeOut }} // ✅ fixed
                       className="overflow-hidden"
                     >
-                      <div className="p-5 sm:p-6 border-t border-neutral-100 dark:border-neutral-800">
+                      <div className="p-5 sm:p-6 border-t border-neutral-100 dark:border-neutral-800 bg-neutral-50 dark:bg-neutral-900/40">
                         <div className="space-y-3 text-[15px] sm:text-base leading-relaxed text-neutral-700 dark:text-neutral-300">
                           {post.content.map((para, i) => (
                             <p key={i}>{para}</p>

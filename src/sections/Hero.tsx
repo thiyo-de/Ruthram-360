@@ -1,11 +1,12 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { ArrowRight, Play } from "lucide-react";
+import { ArrowRight, BadgeCheck } from "lucide-react";
 import BG from "../Assets/bg.jpg";
 import { Link } from "react-router-dom";
 
 const MotionLink = motion(Link);
 
+/* ---------- Animations ---------- */
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -22,6 +23,33 @@ const wordVariants: Variants = {
     transition: { type: "spring", stiffness: 320, damping: 26 },
   },
 };
+
+/* ---------- Count up (accessible, reduced-motion friendly) ---------- */
+function useCountUp(to: number, duration = 1200) {
+  const prefersReduced = useReducedMotion();
+  const [value, setValue] = useState(0);
+
+  useEffect(() => {
+    if (prefersReduced) {
+      setValue(to);
+      return;
+    }
+    let raf = 0;
+    let start: number | null = null;
+
+    const step = (t: number) => {
+      if (start === null) start = t;
+      const p = Math.min(1, (t - start) / duration);
+      setValue(Math.round(to * p));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration, prefersReduced]); // ✅ FIX
+
+  return value;
+}
 
 const Hero = () => {
   const prefersReduced = useReducedMotion();
@@ -49,6 +77,11 @@ const Hero = () => {
     []
   );
 
+  // Animated counters
+  const tours = useCountUp(35);
+  const satisfaction = useCountUp(100);
+  const capture = useCountUp(8);
+
   return (
     <section
       className="relative min-h-[92svh] md:min-h-screen flex items-center justify-center overflow-hidden
@@ -57,16 +90,20 @@ const Hero = () => {
     >
       {/* Background Image */}
       <div
-        className="absolute inset-0 -z-20 bg-cover bg-center"
+        className="absolute inset-0 -z-20 bg-cover bg-center will-change-transform"
         style={{ backgroundImage: `url(${BG})` }}
         aria-hidden
       />
 
-      {/* Overlay gradient */}
-      <div
-        className="absolute inset-0 -z-10 glass-prism-bg bg-gradient-to-br from-white/90 via-white/80 to-white/90"
-        aria-hidden
-      />
+      {/* Animated gradient waves overlay */}
+      <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/90 mix-blend-normal" />
+        {/* gentle wave using radial gradients */}
+        <div className="absolute -inset-8 opacity-60 blur-2xl">
+          <div className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]" />
+          <div className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]" />
+        </div>
+      </div>
 
       {/* Subtle dot texture */}
       <div
@@ -78,7 +115,7 @@ const Hero = () => {
         aria-hidden
       />
 
-      {/* Floating Elements */}
+      {/* Floating particles */}
       {!prefersReduced && (
         <div className="pointer-events-none absolute inset-0">
           {floaters.map((f) => (
@@ -122,7 +159,7 @@ const Hero = () => {
                     "font-heading heading-hero tracking-tight leading-none font-black",
                     ["Premium", "Virtual"].includes(word)
                       ? "text-gradient"
-                      : "text-muted-foreground",
+                      : "text-muted-foreground"
                   ].join(" ")}
                 >
                   {word}
@@ -151,7 +188,7 @@ const Hero = () => {
             className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 justify-center items-center px-2"
           >
             <MotionLink
-              to="/contact" // use router path, not href
+              to="/contact"
               whileHover={prefersReduced ? undefined : { scale: 1.04 }}
               whileTap={prefersReduced ? undefined : { scale: 0.96 }}
               className="btn-primary inline-flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4"
@@ -162,43 +199,74 @@ const Hero = () => {
             </MotionLink>
 
             <MotionLink
-              to="/portfolio" // ← change to your route (e.g., "/portfolio") if needed
+              to="/portfolio"
               whileHover={prefersReduced ? undefined : { scale: 1.04 }}
               whileTap={prefersReduced ? undefined : { scale: 0.96 }}
               className="btn-glass text-muted-foreground inline-flex items-center gap-2 sm:gap-3 text-sm sm:text-base md:text-lg px-6 sm:px-8 py-3 sm:py-4"
               aria-label="Our Works"
             >
               <span>Our Works</span>
+              <motion.span
+                aria-hidden
+                animate={{ x: [0, 6, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                →
+              </motion.span>
             </MotionLink>
           </motion.div>
 
-          {/* Stats */}
+          {/* Trust Signals */}
+          <motion.div
+            variants={wordVariants}
+            transition={{ duration: 0.6, delay: 0.45 }}
+            className="mt-5 sm:mt-6 flex flex-wrap items-center justify-center gap-2.5 sm:gap-3.5"
+          >
+            {[
+              "Google Street View • Trusted",
+              "Matterport • Partner",
+              "Google Standard",
+            ].map((label) => (
+              <div
+                key={label}
+                className="inline-flex items-center gap-1.5 rounded-full border border-foreground/10 bg-white/70 dark:bg-white/10 px-3 py-1.5 text-xs sm:text-sm text-muted-foreground backdrop-blur"
+                title={label}
+              >
+                <BadgeCheck className="size-4 text-primary" />
+                <span>{label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Stats (soft gradient cards + animated counters) */}
           <motion.div
             variants={containerVariants}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8
                        mt-10 sm:mt-12 md:mt-14 lg:mt-16 px-2 sm:px-0 items-stretch"
           >
             {[
-              { number: "35+", label: "Tours Created" },
-              { number: "100%", label: "Client Satisfaction" },
-              { number: "8K", label: "Capture Quality" },
+              { value: tours, suffix: "+", label: "Tours Created" },
+              {
+                value: satisfaction,
+                suffix: "%",
+                label: "Client Satisfaction",
+              },
+              { value: capture, suffix: "K", label: "Capture Quality" },
             ].map((stat, idx) => (
               <motion.div
                 key={stat.label}
                 variants={wordVariants}
-                transition={{ duration: 0.55, delay: 0.5 + idx * 0.1 }}
-                className="glass-prism h-full p-4 sm:p-5 md:p-6 flex flex-col items-center justify-center text-center gap-1.5"
+                transition={{ duration: 0.55, delay: 0.6 + idx * 0.1 }}
+                className="h-full p-4 sm:p-5 md:p-6 flex flex-col items-center justify-center text-center gap-1.5
+                           rounded-2xl border border-foreground/10
+                           bg-gradient-to-br from-primary/5 via-white/70 to-amber-50/60
+                           dark:from-primary/10 dark:via-white/5 dark:to-white/0 backdrop-blur"
               >
-                <div
-                  className="font-heading leading-none tracking-tight text-primary font-extrabold
-                                text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px]"
-                >
-                  {stat.number}
+                <div className="font-heading leading-none tracking-tight text-primary font-extrabold text-[20px] sm:text-[24px] md:text-[30px] lg:text-[36px]">
+                  {stat.value}
+                  {stat.suffix}
                 </div>
-                <div
-                  className="font-satoshi text-muted-foreground
-                                text-[12.5px] sm:text-sm md:text-base leading-snug"
-                >
+                <div className="font-satoshi text-muted-foreground text-[12.5px] sm:text-sm md:text-base leading-snug">
                   {stat.label}
                 </div>
               </motion.div>
@@ -207,14 +275,14 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Bottom fade overlay (smooth fade to white) */}
+      {/* Bottom fade overlay */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-24 md:h-32 z-0
                    bg-gradient-to-b from-transparent via-white/80 to-white"
         aria-hidden
       />
 
-      {/* Scroll Indicator (slightly smaller version) */}
+      {/* Scroll Indicator */}
       {!prefersReduced && (
         <motion.div
           initial={{ opacity: 0 }}

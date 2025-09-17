@@ -1053,7 +1053,7 @@ const PortfolioPage = () => {
         </div>
       </section>
 
-      {/* Filter Categories */}
+      {/* === Filter Categories === */}
       <section className="pb-12">
         <div className="container mx-auto px-6">
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
@@ -1066,19 +1066,21 @@ const PortfolioPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setSelectedCategory(category.name)}
-                  className={`glass-card px-4 sm:px-6 py-3 flex items-center gap-2 sm:gap-3 transition-all duration-300 ${
-                    isActive
-                      ? "bg-gradient-primary text-white"
-                      : "text-muted-foreground hover:bg-white/10"
-                  }`}
+                  className={`px-4 sm:px-6 py-2.5 rounded-full flex items-center gap-2 text-sm sm:text-base font-medium transition-all duration-300 
+              ${
+                isActive
+                  ? "bg-gradient-to-r from-primary to-orange-500 text-white shadow-md"
+                  : "border border-neutral-300 text-muted-foreground bg-white hover:border-primary/50"
+              }`}
                   aria-pressed={isActive}
                 >
                   <MaskIcon
                     src={category.icon}
-                    className="w-5 h-5 sm:w-6 sm:h-6"
-                    title={`${category.name} icon`}
+                    className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                      isActive ? "text-white" : "text-muted-foreground"
+                    }`}
                   />
-                  <span className="font-medium">{category.name}</span>
+                  {category.name}
                 </motion.button>
               );
             })}
@@ -1086,7 +1088,7 @@ const PortfolioPage = () => {
         </div>
       </section>
 
-      {/* Portfolio Grid */}
+      {/* === Portfolio Grid (Cards) === */}
       <section className="pb-24">
         <div className="container mx-auto px-6">
           <motion.div
@@ -1094,153 +1096,86 @@ const PortfolioPage = () => {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8"
           >
             <AnimatePresence>
-              {projectsToRender.map((project, idx) => (
+              {projectsToRender.map((project) => (
                 <motion.div
-                  key={`${project.id}-${idx}`}
+                  key={project.id}
                   layout
                   initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.94 }}
                   whileHover={{ scale: 1.02 }}
                   onClick={() => setSelectedProject(project)}
-                  onKeyDown={(e) =>
-                    (e.key === "Enter" || e.key === " ") &&
-                    setSelectedProject(project)
-                  }
                   role="button"
                   tabIndex={0}
-                  className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                  className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-xl ring-1 ring-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
-                  {/* background image */}
+                  {/* Background image */}
                   <img
                     src={project.image}
                     alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    onError={(e) => {
-                      (e.currentTarget as HTMLImageElement).src =
-                        "https://via.placeholder.com/800x600.png?text=Preview";
-                    }}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
 
-                  {/* gradient overlay (no blur) */}
-                  <div className="absolute inset-0">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
-                    <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_-10%,rgba(0,0,0,0.35),transparent_60%)]" />
-                  </div>
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
 
-                  {/* content pinned to bottom */}
-                  <div className="relative z-[1] p-3.5 sm:p-4 md:p-5 flex flex-col justify-end h-full text-white">
-                    {/* Title */}
-                    <h3 className="text-[15px] sm:text-base md:text-lg font-semibold leading-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.45)]">
+                  {/* Card content */}
+                  <div className="relative z-10 p-4 sm:p-5 flex flex-col justify-end h-full text-white">
+                    <h3 className="text-base sm:text-lg font-semibold">
                       {project.title}
                     </h3>
-
-                    {/* Description (tighter + 2 lines) */}
-                    <p className="mt-1 text-[11px] sm:text-[12px] text-white/90 line-clamp-2">
+                    <p className="mt-1 text-xs sm:text-sm text-white/90 line-clamp-2">
                       {project.description}
                     </p>
 
-                    {/* Glassmorphism chips (reduced height) */}
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
+                    {/* Badge row */}
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <span className="px-2.5 py-1 rounded-full text-xs bg-white/15 border border-white/25 backdrop-blur-sm">
                         {project.client}
                       </span>
-                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
+                      <span className="px-2.5 py-1 rounded-full text-xs bg-white/15 border border-white/25">
                         {project.completedDate}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-full text-xs bg-gradient-to-r from-primary to-orange-500 text-white shadow">
+                        {project.category}
                       </span>
                     </div>
 
-                    {/* bottom row (compact) */}
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-[10px] sm:text-[11px] text-white/80">
-                        {project.category}
-                      </span>
-
-                      {/* small faux CTA; card handles click */}
-                      <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white text-neutral-900 text-[11px] sm:text-[12px] font-medium shadow-md group-hover:shadow-lg transition-shadow">
-                        View details
+                    {/* CTA */}
+                    <div className="mt-4 flex justify-end">
+                      <span className="px-3 py-1.5 text-xs rounded-full bg-white text-neutral-900 font-medium shadow group-hover:shadow-lg transition">
+                        View Details
                       </span>
                     </div>
                   </div>
 
-                  {/* reduced overall height: less portraity aspect */}
-                  <div className="invisible pointer-events-none select-none">
-                    {/* was aspect-[4/5]; now shorter */}
-                    <div className="aspect-[5/4] sm:aspect-[4/3]" />
+                  {/* Enforce uniform height */}
+                  <div className="invisible">
+                    <div className="aspect-[4/3]" />
                   </div>
                 </motion.div>
               ))}
             </AnimatePresence>
           </motion.div>
-
-          {/* View More Button */}
-          {!showAll && filteredProjects.length > VISIBLE_LIMIT && (
-            <div className="flex justify-center mt-8">
-              <motion.button
-                type="button"
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowAll(true)}
-                className="px-6 py-3 rounded-lg bg-gradient-primary text-white font-medium"
-              >
-                View More
-              </motion.button>
-            </div>
-          )}
         </div>
       </section>
 
       <Blog />
 
       {/* Our Clients */}
+      {/* === Clients Section === */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
-          {/* Section header */}
-
-          <div className="text-center mb-10 sm:mb-12">
-            <div className="flex items-center justify-center gap-2 sm:gap-3">
-              {/* Left triple bars – visible on all sizes */}
-              <motion.div
-                initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
-                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.45, ease: "easeOut" }}
-                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
-                aria-hidden="true"
-              >
-                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
-                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
-                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
-              </motion.div>
-
-              {/* Title */}
-              <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
-                <span>Our&nbsp;</span>
-                <span className="text-gradient">Clients</span>
-              </h2>
-
-              {/* Right triple bars – visible on all sizes */}
-              <motion.div
-                initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
-                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
-                viewport={{ once: true, amount: 0.6 }}
-                transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
-                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
-                aria-hidden="true"
-              >
-                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
-                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
-                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
-              </motion.div>
-            </div>
+          <div className="text-center mb-12">
+            <h2 className="font-heading font-bold text-2xl sm:text-4xl text-muted-foreground">
+              Trusted By{" "}
+              <span className="text-gradient">Leading Institutions</span>
+            </h2>
           </div>
 
-          {/* Logos marquee */}
           <Marquee
             items={clients}
-            cardClass="bg-white p-4 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-glow"
+            cardClass="bg-white p-4 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-md rounded-lg"
             speedPxPerSec={60}
           />
         </div>

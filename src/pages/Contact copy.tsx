@@ -106,8 +106,7 @@ function CustomSelect({
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={onKeyDown}
-        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 pr-10 text-left outline-none
-                   focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 pr-10 text-left outline-none focus:border-primary transition"
       >
         <span className={value ? "text-gray-900" : "text-gray-500"}>
           {value || placeholder}
@@ -264,18 +263,52 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b">
+      <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Local CSS for the hero grid texture */
+        .hero-grid {
+          background-image:
+            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
+          background-size: 48px 48px;
+        }
+      `}</style>
+
+      {/* ===== Hero (matches Services/About) ===== */}
       <section className="relative pt-48 pb-24 overflow-hidden">
+        {/* Local CSS for the grid texture (kept inside this page) */}
+
+        {/* Background layers */}
         <div className="absolute inset-0 -z-10">
+          {/* Base image (optional—swap Contact_BG to any image; or remove if not needed) */}
+          <img
+            src=""
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+
+          {/* White overlay with slight blur */}
           <div className="absolute inset-0 bg-white/85 backdrop-blur-[6px]" />
+
+          {/* Subtle grid texture */}
+          <div className="absolute inset-0 hero-grid pointer-events-none" />
+
+          {/* Bottom fade (same height as other pages) */}
           <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-white" />
         </div>
+
         <div className="container mx-auto px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-zinc-700 mb-6 px-4">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
               Get In <span className="text-gradient">Touch</span>
             </h1>
             <p className="text-lg sm:text-xl text-zinc-600 max-w-3xl mx-auto mb-12 px-4">
@@ -386,7 +419,7 @@ const ContactPage = () => {
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition"
                         placeholder="Enter your full name"
                       />
                     </div>
@@ -402,7 +435,7 @@ const ContactPage = () => {
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -418,8 +451,8 @@ const ContactPage = () => {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
-                        placeholder="+91 1234567890"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition"
+                        placeholder="+91 12345 67890"
                       />
                     </div>
 
@@ -433,7 +466,7 @@ const ContactPage = () => {
                         name="company"
                         value={formData.company}
                         onChange={handleInputChange}
-                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                        className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition"
                         placeholder="Your company name"
                       />
                     </div>
@@ -474,7 +507,7 @@ const ContactPage = () => {
                       name="project"
                       value={formData.project}
                       onChange={handleInputChange}
-                      className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition"
+                      className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition"
                       placeholder="e.g., Real estate listing, restaurant showcase, office tour"
                     />
                   </div>
@@ -489,7 +522,7 @@ const ContactPage = () => {
                       onChange={handleInputChange}
                       rows={5}
                       required
-                      className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:ring-4 focus:ring-primary/20 focus:border-primary transition resize-none"
+                      className="w-full bg-white text-gray-900 border border-gray-200 rounded-lg px-4 py-3 placeholder-gray-500 outline-none focus:border-primary transition resize-none"
                       placeholder="Tell us more about your project, timeline, specific requirements, or any questions you have..."
                     />
                   </div>

@@ -1,6 +1,14 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  type CSSProperties,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, X, Check } from "lucide-react";
+import Service_BG from "../Assets/Service.jpg";
+import Blog from "@/components/blog";
 
 /* ---------- Client Logos (replace with your assets as needed) ---------- */
 import AU from "../Assets/Alagappa.png";
@@ -46,6 +54,21 @@ import Sindthuja from "../Assets/Sinduja Hospital.avif";
 import DSCE1 from "../Assets/DSCE1.jpeg";
 import Vamsam_Hospital from "../Assets/Vamsam Hospital.avif";
 import Mount_Zion from "../Assets/Mount Zion.jpg";
+import SKMC from "../Assets/SKMC.jpg";
+import TPS1 from "../Assets/TPS1.avif";
+import TPS2 from "../Assets/TPS2.avif";
+import AU_Museum from "../Assets/Vallal Dr. Alagappar Museum.jpg";
+import Anandam from "../Assets/anadam.jpg";
+import Chola from "../Assets/Chola.png";
+import KRCE1 from "../Assets/KRCE1.jpg";
+import KRCT1 from "../Assets/krct1.jpeg";
+import MIET1 from "../Assets/MIET1.png";
+import MG1 from "../Assets/MG.png";
+import MITP from "../Assets/MITP.jpg";
+import PMP from "../Assets/PMP.jpg";
+import Shankar from "../Assets/Shankar.png";
+import SVPS from "../Assets/SVPS.jpg";
+import VN from "../Assets/VN.jpg";
 
 /* -------------------- Types -------------------- */
 type Category = "All" | "Virtual Tour" | "3D Tour" | "Google Street View";
@@ -190,7 +213,10 @@ const Marquee = ({
         {[0, 1].map((copyIndex) => (
           <div key={copyIndex} className="flex gap-8 sm:gap-12">
             {items.map((client, i) => (
-              <div key={`${client.name}-${copyIndex}-${i}`} className="w-[140px] sm:w-[160px]">
+              <div
+                key={`${client.name}-${copyIndex}-${i}`}
+                className="w-[140px] sm:w-[160px]"
+              >
                 <div className={`rounded-2xl ${cardClass}`}>
                   <img
                     src={client.logo}
@@ -304,7 +330,10 @@ const ProjectModal = ({
         >
           {/* Header */}
           <div className="flex items-center justify-between px-6 pt-5">
-            <h3 id="project-title" className="text-xl sm:text-2xl font-semibold">
+            <h3
+              id="project-title"
+              className="text-xl sm:text-2xl font-semibold"
+            >
               {project.title}
             </h3>
             <button
@@ -339,7 +368,9 @@ const ProjectModal = ({
 
             {project.features?.length ? (
               <div className="mt-5">
-                <h4 className="text-neutral-900 font-semibold mb-3">Key Features</h4>
+                <h4 className="text-neutral-900 font-semibold mb-3">
+                  Key Features
+                </h4>
                 <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {project.features.map((f, i) => (
                     <li
@@ -356,11 +387,15 @@ const ProjectModal = ({
             <div className="mt-6 grid grid-cols-2 gap-6 text-sm">
               <div>
                 <div className="text-neutral-500">Client</div>
-                <div className="font-medium text-neutral-900">{project.client}</div>
+                <div className="font-medium text-neutral-900">
+                  {project.client}
+                </div>
               </div>
               <div>
                 <div className="text-neutral-500">Completed</div>
-                <div className="font-medium text-neutral-900">{project.completedDate}</div>
+                <div className="font-medium text-neutral-900">
+                  {project.completedDate}
+                </div>
               </div>
             </div>
 
@@ -449,216 +484,464 @@ const PortfolioPage = () => {
     { name: "Google Street View", icon: GSV },
   ];
 
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: "Alagappa University - Virtual Tour",
-      category: "Virtual Tour",
-      image: AU1,
-      description:
-        "Prestigious Alagappa University – a hub of excellence with world-class facilities and vibrant campus life.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Alagappa University",
-      completedDate: "November 2024",
-      url: "https://alagappauniversity.ac.in/virtual-tour/Alagappa_University_Campus/index.htm",
-    },
-    {
-      id: 2,
-      title: "Vijayarani Hotel - 3D Tour",
-      category: "3D Tour",
-      image: V_Hotel,
-      description: "Experience Vijayarani Hotel in 360° – comfort, elegance, and modern amenities.",
-      features: ["3D Experience", "Interior Navigation", "Room Tours"],
-      client: "Hotel Vijayarani",
-      completedDate: "March 2024",
-      url: "https://example.com/vijayarani-hotel-3d-tour",
-    },
-    {
-      id: 3,
-      title: "Alagappa University - GSV",
-      category: "Google Street View",
-      image: AU1,
-      description:
-        "Renowned Alagappa University – sprawling campus with lush greenery and state-of-the-art facilities.",
-      features: ["Layer View", "Smooth Nav", "Live Track"],
-      client: "Alagappa University",
-      completedDate: "November 2024",
-      url: "https://maps.app.goo.gl/c1xzFwsRtzaZUttZ8",
-    },
-    {
-      id: 4,
-      title: "Manonmaniam Sundaranar University - Virtual Tour",
-      category: "Virtual Tour",
-      image: MSU1,
-      description:
-        "Explore Manonmaniam Sundaranar University campus with our immersive Virtual Tour.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Manonmaniam Sundaranar University",
-      completedDate: "March 2024",
-      url: "https://msuniv.ac.in/Virtual_Tour/Manonmaniam_Sundaranar_University/MSU/index.htm",
-    },
-    {
-      id: 5,
-      title: "Periyar University - Virtual Tour",
-      category: "Virtual Tour",
-      image: PU,
-      description:
-        "Step inside Periyar University – classrooms, libraries, and vibrant campus life in 360°.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Periyar University",
-      completedDate: "Augest 2023",
-      url: "https://www.periyaruniversity.ac.in/vtour/index.htm",
-    },
-     {
-      id: 6,
-      title: "Mother Teresa Group of Institutions - Virtual Tour",
-      category: "Virtual Tour",
-      image: MTCG,
-      description:
-        "Experience the academic spirit and modern facilities of Mother Teresa Group of Institutions in 3D Virtual Tour",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Mother Teresa Group of Institutions",
-      completedDate: "May 2023",
-      url: "https://www.motherterasakalvi.com/virtualtour/motherterasa/MTC/index.htm",
-    },
-     {
-      id: 7,
-      title: "Periyar maniyammai Institute of Science & Technology - Virtual Tour",
-      category: "Virtual Tour",
-      image: PMUST,
-      description:
-        "Periyar Maniyammai Institute of Science & Technology – Immersive 3D Campus Tour.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Periyar Maniammai Institute of Science & Technology",
-      completedDate: "Augest 2023",
-      url: "https://uandi.media/Virtual-tour/Periyar_Maniammai/index.htm",
-    },
-     {
-      id: 8,
-      title: "MIT Agriculture & Technology - Virtual Tour",
-      category: "Virtual Tour",
-      image: MITCAT,
-      description:
-        "Virtual Tour of MIT Agriculture & Technology – Innovation Meets Education.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "MIT Agriculture & Technology",
-      completedDate: "December 2023",
-      url: "https://tour.mitcat.ac.in/",
-    },
-     {
-      id: 9,
-      title: "Sona College of Technology - Virtual Tour",
-      category: "Virtual Tour",
-      image: SONACT,
-      description:
-        "Step inside our vibrant campus, explore classrooms, labs, and student life in 360°.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "SONA College of Technology",
-      completedDate: "May 2024",
-      url: "https://www.sonatech.ac.in/campus-360-virtual-tour/Aerialview/",
-    },
-     {
-      id: 10,
-      title: "K Ramakrishnan College of Engineering - Virtual Tour",
-      category: "Virtual Tour",
-      image: KRCEPIC,
-      description:
-        "Explore our state-of-the-art campus, academic blocks, and vibrant student life in 360°.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "K Ramakrishnan College of Engineering",
-      completedDate: "December 2022",
-      url: "https://uandi.media/Virtual-tour/KRCE/index.htm",
-    },
-     {
-      id: 11,
-      title: "Thiagarajar Polytechnic College - Virtual Tour",
-      category: "Virtual Tour",
-      image: TPC,
-      description:
-        "From workshops to hostels, explore your future campus anytime, anywhere.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Thiagarajar Polytechnic College",
-      completedDate: "May 2024",
-      url: "https://tpt.edu.in/campus-360-virtual-tour/TPT_Aerialview/index.htm",
-    },
-     {
-      id: 12,
-      title: "Treat MSME - Virtual Tour",
-      category: "Virtual Tour",
-      image: TREAT,
-      description:
-        "From forging to fabrication, experience industry-ready spaces with advanced machinery and hands-on training.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Treat MSME",
-      completedDate: "Augest 2022",
-      url: "https://uandi.media/Virtual-tour/treat/index.htm",
-    },
-     {
-      id: 13,
-      title: "Kauvery Hospital - Virtual Tour",
-      category: "Virtual Tour",
-      image: KMC,
-      description:
-        "Discover cutting-edge medical technology, specialized departments, and a healing environment.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Kauvery Hospital",
-      completedDate: "May 2022",
-      url: "https://uandi.media/Virtual-tour/KMC/index.htm",
-    },
-     {
-      id: 14,
-      title: "Sinduja Hospital - Virtual Tour",
-      category: "Virtual Tour",
-      image: Sindthuja,
-      description:
-        "Explore patient care facilities, advanced treatment units, and modern healthcare services in 360°.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Sinduja Hospital",
-      completedDate: "Feb 2022",
-      url: "https://uandi.media/Virtual-tour/sindujahospital/index.htm",
-    },
-     {
-      id: 15,
-      title: "DSCE - Virtual Tour",
-      category: "Virtual Tour",
-      image: DSCE1,
-      description:
-        "From lecture halls to hostels, explore your future campus anytime, anywhere.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "DSCE",
-      completedDate: "June 2024",
-      url: "https://dsce.ac.in/CAMPUSTOUR/DSCE/",
-    },
-     {
-      id: 16,
-      title: "Vamsam Hospital & Fertility Research Centre - Virtual Tour",
-      category: "Virtual Tour",
-      image: Vamsam_Hospital,
-      description:
-        "Explore world-class fertility care, advanced treatment units, and patient-friendly facilities in 360°.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Vamasm Hospital & Fertility Research Centre",
-      completedDate: "October 2023",
-      url: "https://uandi.media/Virtual-tour/vamsamfertilitycentre/index.htm",
-    },
-     {
-      id: 17,
-      title: "Mount Zion International School - Virtual Tour",
-      category: "Virtual Tour",
-      image: Mount_Zion,
-      description:
-        "Discover global education standards, interactive learning spaces, and student-friendly facilities.",
-      features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
-      client: "Mount Zion International School",
-      completedDate: "March 2023",
-      url: "https://www.periyaruniversity.ac.in/vtour/index.htm",
-    },
-  ];
+  const projects: Project[] = useMemo(
+    () => [
+      {
+        id: 1,
+        title: "Alagappa University - Virtual Tour",
+        category: "Virtual Tour",
+        image: AU1,
+        description:
+          "Prestigious Alagappa University – a hub of excellence with world-class facilities and vibrant campus life.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Alagappa University",
+        completedDate: "November 2024",
+        url: "https://alagappauniversity.ac.in/virtual-tour/Alagappa_University_Campus/index.htm",
+      },
+      {
+        id: 2,
+        title: "Vijayarani Hotel - 3D Tour",
+        category: "3D Tour",
+        image: V_Hotel,
+        description:
+          "Experience Vijayarani Hotel in 360° – comfort, elegance, and modern amenities.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Hotel Vijayarani",
+        completedDate: "March 2024",
+        url: "https://my.treedis.com/tour/hotel-vijayarani",
+      },
+      {
+        id: 3,
+        title: "Alagappa University - GSV",
+        category: "Google Street View",
+        image: AU1,
+        description:
+          "Renowned Alagappa University – sprawling campus with lush greenery and state-of-the-art facilities.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Alagappa University",
+        completedDate: "November 2024",
+        url: "https://maps.app.goo.gl/c1xzFwsRtzaZUttZ8",
+      },
+      {
+        id: 4,
+        title: "Manonmaniam Sundaranar University - Virtual Tour",
+        category: "Virtual Tour",
+        image: MSU1,
+        description:
+          "Explore Manonmaniam Sundaranar University campus with our immersive Virtual Tour.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Manonmaniam Sundaranar University",
+        completedDate: "March 2024",
+        url: "https://msuniv.ac.in/Virtual_Tour/Manonmaniam_Sundaranar_University/MSU/index.htm",
+      },
+      {
+        id: 5,
+        title: "Periyar University - Virtual Tour",
+        category: "Virtual Tour",
+        image: PU,
+        description:
+          "Step inside Periyar University – classrooms, libraries, and vibrant campus life in 360°.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Periyar University",
+        completedDate: "Augest 2023",
+        url: "https://www.periyaruniversity.ac.in/vtour/index.htm",
+      },
+      {
+        id: 6,
+        title: "Mother Teresa Group of Institutions - Virtual Tour",
+        category: "Virtual Tour",
+        image: MTCG,
+        description:
+          "Experience the academic spirit and modern facilities of Mother Teresa Group of Institutions in 3D Virtual Tour",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Mother Teresa Group of Institutions",
+        completedDate: "May 2023",
+        url: "https://www.motherterasakalvi.com/virtualtour/motherterasa/MTC/index.htm",
+      },
+      {
+        id: 7,
+        title:
+          "Periyar maniyammai Institute of Science & Technology - Virtual Tour",
+        category: "Virtual Tour",
+        image: PMUST,
+        description:
+          "Periyar Maniyammai Institute of Science & Technology – Immersive 3D Campus Tour.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Periyar Maniammai Institute of Science & Technology",
+        completedDate: "Augest 2023",
+        url: "https://uandi.media/Virtual-tour/Periyar_Maniammai/index.htm",
+      },
+      {
+        id: 8,
+        title: "MIT Agriculture & Technology - Virtual Tour",
+        category: "Virtual Tour",
+        image: MITCAT,
+        description:
+          "Virtual Tour of MIT Agriculture & Technology – Innovation Meets Education.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "MIT Agriculture & Technology",
+        completedDate: "December 2023",
+        url: "https://tour.mitcat.ac.in/",
+      },
+      {
+        id: 9,
+        title: "Sona College of Technology - Virtual Tour",
+        category: "Virtual Tour",
+        image: SONACT,
+        description:
+          "Step inside our vibrant campus, explore classrooms, labs, and student life in 360°.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "SONA College of Technology",
+        completedDate: "May 2024",
+        url: "https://www.sonatech.ac.in/campus-360-virtual-tour/Aerialview/",
+      },
+      {
+        id: 10,
+        title: "K Ramakrishnan College of Engineering - Virtual Tour",
+        category: "Virtual Tour",
+        image: KRCEPIC,
+        description:
+          "Explore our state-of-the-art campus, academic blocks, and vibrant student life in 360°.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "K Ramakrishnan College of Engineering",
+        completedDate: "December 2022",
+        url: "https://uandi.media/Virtual-tour/KRCE/index.htm",
+      },
+      {
+        id: 11,
+        title: "Thiagarajar Polytechnic College - Virtual Tour",
+        category: "Virtual Tour",
+        image: TPC,
+        description:
+          "From workshops to hostels, explore your future campus anytime, anywhere.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Thiagarajar Polytechnic College",
+        completedDate: "May 2024",
+        url: "https://tpt.edu.in/campus-360-virtual-tour/TPT_Aerialview/index.htm",
+      },
+      {
+        id: 12,
+        title: "Treat MSME - Virtual Tour",
+        category: "Virtual Tour",
+        image: TREAT,
+        description:
+          "From forging to fabrication, experience industry-ready spaces with advanced machinery and hands-on training.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Treat MSME",
+        completedDate: "Augest 2022",
+        url: "https://uandi.media/Virtual-tour/treat/index.htm",
+      },
+      {
+        id: 13,
+        title: "Kauvery Hospital - Virtual Tour",
+        category: "Virtual Tour",
+        image: KMC,
+        description:
+          "Discover cutting-edge medical technology, specialized departments, and a healing environment.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Kauvery Hospital",
+        completedDate: "May 2022",
+        url: "https://uandi.media/Virtual-tour/KMC/index.htm",
+      },
+      {
+        id: 14,
+        title: "Sinduja Hospital - Virtual Tour",
+        category: "Virtual Tour",
+        image: Sindthuja,
+        description:
+          "Explore patient care facilities, advanced treatment units, and modern healthcare services in 360°.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Sinduja Hospital",
+        completedDate: "Feb 2022",
+        url: "https://uandi.media/Virtual-tour/sindujahospital/index.htm",
+      },
+      {
+        id: 15,
+        title: "DSCE - Virtual Tour",
+        category: "Virtual Tour",
+        image: DSCE1,
+        description:
+          "From lecture halls to hostels, explore your future campus anytime, anywhere.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "DSCE",
+        completedDate: "June 2024",
+        url: "https://dsce.ac.in/CAMPUSTOUR/DSCE/",
+      },
+      {
+        id: 16,
+        title: "Vamsam Hospital & Fertility Research Centre - Virtual Tour",
+        category: "Virtual Tour",
+        image: Vamsam_Hospital,
+        description:
+          "Explore world-class fertility care, advanced treatment units, and patient-friendly facilities in 360°.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Vamasm Hospital & Fertility Research Centre",
+        completedDate: "October 2023",
+        url: "https://uandi.media/Virtual-tour/vamsamfertilitycentre/index.htm",
+      },
+      {
+        id: 17,
+        title: "Mount Zion International School - Virtual Tour",
+        category: "Virtual Tour",
+        image: Mount_Zion,
+        description:
+          "Discover global education standards, interactive learning spaces, and student-friendly facilities.",
+        features: ["360 Virtual Tour", "Interactive Pano", "Aerial Views"],
+        client: "Mount Zion International School",
+        completedDate: "March 2023",
+        url: "https://www.periyaruniversity.ac.in/vtour/index.htm",
+      },
+      {
+        id: 18,
+        title: "MIT College of Agriculture & Technology - 3D Tour",
+        category: "3D Tour",
+        image: MITCAT,
+        description:
+          "Explore modern classrooms, research labs, and green agricultural spaces in 360°.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "MITCAT",
+        completedDate: "April 2023",
+        url: "https://my.treedis.com/tour/mit-agriculture",
+      },
+      {
+        id: 19,
+        title: "Periyar Robotics & Al Lab - 3D Tour",
+        category: "3D Tour",
+        image: PMUST,
+        description:
+          "Explore cutting-edge robotics, artificial intelligence research, and innovation hubs in 360°",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Periyar University",
+        completedDate: "September 2023",
+        url: "https://my.treedis.com/tour/roboticslab",
+      },
+      {
+        id: 20,
+        title: "Srikamatchi Medical Center - 3D Tour",
+        category: "3D Tour",
+        image: SKMC,
+        description:
+          "Explore advanced healthcare facilities, treatment units, and patient care spaces in 360°.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Sri Kamakshi Medical Centre",
+        completedDate: "June 2023",
+        url: "https://my.treedis.com/tour/srikamatchi-medical-center",
+      },
+      {
+        id: 21,
+        title: "SONA College of Technology - 3D Tour",
+        category: "3D Tour",
+        image: SONACT,
+        description:
+          "From lecture halls to hostels, experience every corner of our campus anytime, anywhere.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "SONA College of Technology",
+        completedDate: "March 2024",
+        url: "https://my.treedis.com/tour/sona-college",
+      },
+      {
+        id: 22,
+        title: "Tiruchy Public School, Kattur - 3D Tour",
+        category: "3D Tour",
+        image: TPS1,
+        description:
+          "From academics to activities, experience a vibrant and nurturing campus anytime, anywhere.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Tiruchy Public School",
+        completedDate: "January 2023",
+        url: "https://my.treedis.com/tour/tps-kattur",
+      },
+      {
+        id: 23,
+        title: "Tiruchy Public School, Thuvakudi - 3D Tour",
+        category: "3D Tour",
+        image: TPS2,
+        description:
+          "From academics to activities, experience a vibrant and nurturing campus anytime, anywhere.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Tiruchy Public School",
+        completedDate: "January 2023",
+        url: "https://my.treedis.com/tour/tps-thuvakudi",
+      },
+      {
+        id: 24,
+        title: "Vallal Dr. Alagappar Museum - 3D Tour",
+        category: "3D Tour",
+        image: AU_Museum,
+        description:
+          "From historic artifacts to cultural treasures, experience the museum anytime, anywhere.",
+        features: ["3D Experience", "Interior Navigation", "Room Tours"],
+        client: "Alagappa University",
+        completedDate: "October 2024",
+        url: "https://my.matterport.com/show/?m=vV7Bv9Sk4wT",
+      },
+      {
+        id: 25,
+        title: "Anandam Nagar - GSV",
+        category: "Google Street View",
+        image: Anandam,
+        description:
+          "Discover local life, streetscapes, and nearby hotspots in an immersive walkthrough.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Anandam Nagar",
+        completedDate: "September 2024",
+        url: "https://maps.app.goo.gl/SuhSh2GwTWZ5n1mg8",
+      },
+      {
+        id: 26,
+        title: "Chola City - GSV",
+        category: "Google Street View",
+        image: Chola,
+        description:
+          "From properties to local streets, explore every corner of Chola City anytime, anywhere.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Chola City",
+        completedDate: "May 2023",
+        url: "https://maps.app.goo.gl/kJBRVHkV1ZMhzM8H9",
+      },
+      {
+        id: 27,
+        title: "K Ramakrishnan College of Engineering - GSV",
+        category: "Google Street View",
+        image: KRCE1,
+        description:
+          "Discover academic blocks, labs, and student spaces with easy navigation.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "K Ramakrishnan College of Engineering",
+        completedDate: "June 2022",
+        url: "https://maps.app.goo.gl/21t61TbLswQjac3Y6",
+      },
+      {
+        id: 28,
+        title: "K Ramakrishnan College of Technology - GSV",
+        category: "Google Street View",
+        image: KRCT1,
+        description:
+          "Explore classrooms, labs, libraries, and campus facilities in immersive 360° street view.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "K Ramakrishnan College of Technology",
+        completedDate: "June 2022",
+        url: "https://maps.app.goo.gl/oVH17FpjD6BoUSnR8",
+      },
+      {
+        id: 29,
+        title: "MIET Engineering College - GSV",
+        category: "Google Street View",
+        image: MIET1,
+        description:
+          "From lecture halls to hostels, explore the campus anytime, anywhere in 360°",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "MIET Engineering College",
+        completedDate: "October 2024",
+        url: "https://maps.app.goo.gl/dfsD5PZQAJYmBf1N8",
+      },
+      {
+        id: 30,
+        title: "MG - Properties - GSV",
+        category: "Google Street View",
+        image: MG1,
+        description:
+          "Explore residential and commercial properties, streets, and amenities in immersive 360°",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "MG - Properties",
+        completedDate: "Augest 2021",
+        url: "https://maps.app.goo.gl/A456e2NTDy8fSfRk8",
+      },
+      {
+        id: 31,
+        title: "MIT Polytechnic College - GSV",
+        category: "Google Street View",
+        image: MITP,
+        description:
+          "Discover academic blocks, innovation spaces, and student amenities with easy navigation.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "MIT Polytechnic College",
+        completedDate: "October 2020",
+        url: "https://maps.app.goo.gl/or2ELiLj1Vp6USZh6",
+      },
+      {
+        id: 32,
+        title: "Mother Teresa Group of Institutions - GSV",
+        category: "Google Street View",
+        image: MTCG,
+        description:
+          "Explore classrooms, labs, libraries, and campus facilities in immersive 360° street view.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Mother Teresa Group of Institutions",
+        completedDate: "May 2023",
+        url: "https://maps.app.goo.gl/wAt3WufmJrtUjrPz9",
+      },
+      {
+        id: 33,
+        title: "Periyar University - GSV",
+        category: "Google Street View",
+        image: PU,
+        description:
+          "From lecture halls to hostels, explore the vibrant campus anytime, anywhere in 360°",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "periyar University",
+        completedDate: "December 2021",
+        url: "https://maps.app.goo.gl/8Wgep3vsqWY17qFr8",
+      },
+      {
+        id: 34,
+        title: "Periyar Memorial - GSV",
+        category: "Google Street View",
+        image: PMP,
+        description:
+          "Walk through historic galleries, exhibits, and cultural landmarks in immersive 360°",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Periyar University",
+        completedDate: "February 2021",
+        url: "https://maps.app.goo.gl/UyVNvFA1CiAtQi7NA",
+      },
+      {
+        id: 35,
+        title: "Shankar Nagar - GSV",
+        category: "Google Street View",
+        image: Shankar,
+        description:
+          "Discover residential areas, local amenities, and community spaces with easy navigation.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Shankar Nagar",
+        completedDate: "October 2021",
+        url: "https://maps.app.goo.gl/Ps9s5Hte3BMSrW7NA",
+      },
+      {
+        id: 36,
+        title: "Sri Vignesh Public School - GSV",
+        category: "Google Street View",
+        image: SVPS,
+        description:
+          "Explore classrooms, labs, libraries, and campus facilities in immersive 360° street view.",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Sri Vignesh Public School",
+        completedDate: "January 2023",
+        url: "https://maps.app.goo.gl/M38uTANkYQKVCMCn7",
+      },
+      {
+        id: 37,
+        title: "Vistancia Namakkal - GSV",
+        category: "Google Street View",
+        image: VN,
+        description:
+          "From classrooms to playgrounds, experience the vibrant campus anytime, anywhere in 360°",
+        features: ["Layer View", "Smooth Nav", "Live Track"],
+        client: "Vistancia Namakkal",
+        completedDate: "November 2022",
+        url: "https://maps.app.goo.gl/CwgBjBF67AcFgtzD8",
+      },
+    ],
+    []
+  );
 
   const clients: Client[] = [
     { name: "Alagappa University", logo: AU },
     { name: "Periyar University", logo: Periyar },
-    { name: "Periyar Maniammai Institute of Science & Technology", logo: Periyar_Maniyammai },
+    {
+      name: "Periyar Maniammai Institute of Science & Technology",
+      logo: Periyar_Maniyammai,
+    },
     { name: "Sona College of Technology", logo: Sona },
     { name: "TPT Polytechnic College", logo: TPT },
     { name: "MIET Institutions", logo: MIET },
@@ -677,32 +960,94 @@ const PortfolioPage = () => {
     { name: "Manonmaniam Sundaranar University", logo: MSU },
   ];
 
+  function shuffleArray<T>(array: T[]): T[] {
+    // Fisher-Yates shuffle
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Shuffle only once per mount/category change, not on every render
+  const [shuffledProjects, setShuffledProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    if (selectedCategory === "All") {
+      setShuffledProjects(shuffleArray(projects));
+    }
+  }, [selectedCategory, projects]);
+
   const filteredProjects =
     selectedCategory === "All"
-      ? projects
+      ? shuffledProjects
       : projects.filter((p) => p.category === selectedCategory);
 
   const VISIBLE_LIMIT = 6;
-  const projectsToRender = showAll
-    ? filteredProjects
-    : filteredProjects.slice(0, VISIBLE_LIMIT);
+  const projectsToRender = !showAll
+    ? filteredProjects.slice(0, VISIBLE_LIMIT)
+    : filteredProjects;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-background pt-24">
+    <div className="min-h-screen">
       {/* Hero */}
-      <section className="py-24">
+
+      <section className="relative pt-48 sm:pt-44 md:pt-48 pb-16 sm:pb-20 md:pb-24 overflow-hidden">
+        {/* Local CSS for the grid texture (denser + higher contrast) */}
+        <style>{`
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Local CSS for the hero grid texture */
+        .hero-grid {
+          background-image:
+            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
+          background-size: 48px 48px;
+        }
+      `}</style>
+
+        {/* Background layers (behind content) */}
+        <div className="absolute inset-0 -z-10">
+          {/* Base image (use any; this one is just to validate contrast) */}
+          <img
+            src=""
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+            fetchPriority="high"
+          />
+
+          {/* Theme-aware overlay with slight blur */}
+          <div
+            className="absolute inset-0 bg-background/75 backdrop-blur-[5px]"
+            style={{ willChange: "filter" }}
+          />
+
+          {/* Subtle grid texture (now stronger/denser) */}
+          <div className="absolute inset-0 z-0 hero-grid pointer-events-none" />
+
+          {/* Bottom fade (theme-aware) */}
+          <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-background" />
+        </div>
+
         <div className="container mx-auto px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
-              Our <span className="text-gradient">Portfolio</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight text-muted-foreground mb-6 px-4">
+              <span className="inline-block md:whitespace-nowrap">
+                Our <span className="text-gradient">Portfolio</span>
+              </span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-12 px-4">
-              Explore our collection of immersive virtual experiences. Each project tells a unique
-              story and showcases our commitment to excellence.
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-0 px-4">
+              Explore our collection of immersive virtual experiences. Each
+              project tells a unique story and showcases our commitment to
+              excellence.
             </p>
           </motion.div>
         </div>
@@ -753,52 +1098,77 @@ const PortfolioPage = () => {
                 <motion.div
                   key={`${project.id}-${idx}`}
                   layout
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  whileHover={{ scale: 1.03 }}
-                  className="glass-card group cursor-pointer overflow-hidden"
+                  exit={{ opacity: 0, scale: 0.94 }}
+                  whileHover={{ scale: 1.02 }}
                   onClick={() => setSelectedProject(project)}
+                  onKeyDown={(e) =>
+                    (e.key === "Enter" || e.key === " ") &&
+                    setSelectedProject(project)
+                  }
+                  role="button"
+                  tabIndex={0}
+                  className="relative group cursor-pointer overflow-hidden rounded-3xl shadow-2xl ring-1 ring-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
                 >
-                  {/* IMAGE AREA */}
-                  <div className="relative aspect-video mb-6 rounded-lg overflow-hidden bg-gradient-to-br from-primary/20 to-purple-600/20">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      loading="lazy"
-                      decoding="async"
-                      className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src =
-                          "https://via.placeholder.com/600x400.png?text=Image";
-                      }}
-                    />
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
+                  {/* background image */}
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    decoding="async"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        "https://via.placeholder.com/800x600.png?text=Preview";
+                    }}
+                  />
+
+                  {/* gradient overlay (no blur) */}
+                  <div className="absolute inset-0">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+                    <div className="absolute inset-0 bg-[radial-gradient(120%_70%_at_50%_-10%,rgba(0,0,0,0.35),transparent_60%)]" />
                   </div>
 
-                  {/* TEXT AREA */}
-                  <div className="space-y-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-gradient mb-2 transition-colors">
-                        {project.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground font-medium mb-2">
-                        {project.category}
-                      </p>
-                      <p className="text-muted-foreground/75 text-sm leading-relaxed">
-                        {project.description}
-                      </p>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs text-muted-foreground/75">
+                  {/* content pinned to bottom */}
+                  <div className="relative z-[1] p-3.5 sm:p-4 md:p-5 flex flex-col justify-end h-full text-white">
+                    {/* Title */}
+                    <h3 className="text-[15px] sm:text-base md:text-lg font-semibold leading-tight drop-shadow-[0_1px_0_rgba(0,0,0,0.45)]">
+                      {project.title}
+                    </h3>
+
+                    {/* Description (tighter + 2 lines) */}
+                    <p className="mt-1 text-[11px] sm:text-[12px] text-white/90 line-clamp-2">
+                      {project.description}
+                    </p>
+
+                    {/* Glassmorphism chips (reduced height) */}
+                    <div className="mt-2 flex flex-wrap gap-1.5">
+                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
+                        {project.client}
+                      </span>
+                      <span className="inline-flex items-center h-[22px] sm:h-6 px-2 sm:px-2.5 rounded-full text-[10px] sm:text-[11px] font-medium bg-white/10 backdrop-blur-[6px] border border-white/20 shadow-[0_1px_0_rgba(255,255,255,0.15)_inset,0_1px_8px_-2px_rgba(0,0,0,0.35)]">
                         {project.completedDate}
                       </span>
-                      <ExternalLink
-                        size={16}
-                        className="text-primary group-hover:translate-x-1 transition-transform"
-                        aria-hidden="true"
-                      />
                     </div>
+
+                    {/* bottom row (compact) */}
+                    <div className="mt-3 flex items-center justify-between">
+                      <span className="text-[10px] sm:text-[11px] text-white/80">
+                        {project.category}
+                      </span>
+
+                      {/* small faux CTA; card handles click */}
+                      <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-white text-neutral-900 text-[11px] sm:text-[12px] font-medium shadow-md group-hover:shadow-lg transition-shadow">
+                        View details
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* reduced overall height: less portraity aspect */}
+                  <div className="invisible pointer-events-none select-none">
+                    {/* was aspect-[4/5]; now shorter */}
+                    <div className="aspect-[5/4] sm:aspect-[4/3]" />
                   </div>
                 </motion.div>
               ))}
@@ -822,13 +1192,52 @@ const PortfolioPage = () => {
         </div>
       </section>
 
+      <Blog />
+
       {/* Our Clients */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
-          <h2 className="text-3xl md:text-5xl font-bold text-center text-foreground mb-10">
-            Our Clients
-          </h2>
+          {/* Section header */}
 
+          <div className="text-center mb-10 sm:mb-12">
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
+              {/* Left triple bars – visible on all sizes */}
+              <motion.div
+                initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                aria-hidden="true"
+              >
+                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
+              </motion.div>
+
+              {/* Title */}
+              <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
+                <span>Our&nbsp;</span>
+                <span className="text-gradient">Clients</span>
+              </h2>
+
+              {/* Right triple bars – visible on all sizes */}
+              <motion.div
+                initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
+                whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
+                viewport={{ once: true, amount: 0.6 }}
+                transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
+                className="flex shrink-0 items-center gap-1.5 sm:gap-2"
+                aria-hidden="true"
+              >
+                <span className="block w-0.5 min-w-[2px] h-7  sm:h-8   md:h-9  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-5  sm:h-6   md:h-7  bg-foreground/10 rounded-full" />
+                <span className="block w-0.5 min-w-[2px] h-3  sm:h-3.5 md:h-4  bg-foreground/10 rounded-full" />
+              </motion.div>
+            </div>
+          </div>
+
+          {/* Logos marquee */}
           <Marquee
             items={clients}
             cardClass="bg-white p-4 flex items-center justify-center transition-all duration-300 hover:-translate-y-1 hover:shadow-glow"
@@ -838,7 +1247,10 @@ const PortfolioPage = () => {
       </section>
 
       {/* Modal */}
-      <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+      <ProjectModal
+        project={selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
     </div>
   );
 };

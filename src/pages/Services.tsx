@@ -47,7 +47,7 @@ type Service = {
   title: string;
   description: string;
   features: string[];
-  image: string; // image only (no video)
+  image: string;
   popular?: boolean;
 };
 
@@ -69,11 +69,7 @@ const allServices: Service[] = [
     title: "360 Degree 3D Tour",
     description:
       "Immersive 360° 3D virtual tours that allow your audience to explore spaces interactively with a real sense of presence.",
-    features: [
-      "Immersive 3D Experience",
-      "Interactive Navigation",
-      "Boosts Engagement",
-    ],
+    features: ["Immersive 3D Experience", "Interactive Navigation", "Boosts Engagement"],
     image: VR_Tourism,
   },
   {
@@ -82,12 +78,7 @@ const allServices: Service[] = [
     title: "Google Street View",
     description:
       "Professional Google Street View imagery to boost your local search presence and discovery.",
-    features: [
-      "Google Certified",
-      "SEO Benefits",
-      "Local Discovery",
-      "Business Listings",
-    ],
+    features: ["Google Standard", "SEO Benefits", "Local Discovery", "Business Listings"],
     image: GSV_IMG,
   },
   {
@@ -105,24 +96,16 @@ const allServices: Service[] = [
     title: "360° Aerial Video (Drone)",
     description:
       "Showcase scale, routes, and surroundings with breathtaking overhead 360° motion footage.",
-    features: [
-      "Planned & compliant flights",
-      "Cinematic paths",
-      "5.7K/8K Exports",
-    ],
+    features: ["Planned & compliant flights", "Cinematic paths", "5.7K Exports"],
     image: DRONE,
   },
   {
-    id: "svc-360photo",
+    id: "svc-360video",
     icon: Video,
     title: "360° Videography & Immersive",
     description:
       "Walk-through 360° videos with interactive hotspots, chapters, and CTAs to drive engagement and leads.",
-    features: [
-      "Stabilized Motion",
-      "Interactive Overlays",
-      "YouTube/Meta VR Ready",
-    ],
+    features: ["Stabilized Motion", "Interactive Overlays", "YouTube/Meta VR Ready"],
     image: VIDEO_360,
   },
 ];
@@ -177,8 +160,8 @@ const testimonials = [
       "Since launching the campus tour, time-on-page is up and repetitive questions are down—families come prepared and confident.",
   },
   {
-    name: "Vikas Gupta",
-    role: "Alagappa University",
+    name: "Curator Team",
+    role: "Alagappa University Museum",
     avatar: AU_Museum,
     rating: 4,
     quote:
@@ -193,11 +176,8 @@ const heroContainer: Variants = {
 };
 
 /* ------------------------ Helpers ------------------------ */
-const clamp = (v: number, min: number, max: number) =>
-  Math.min(max, Math.max(min, v));
-
-const rAF = () =>
-  new Promise<void>((res) => requestAnimationFrame(() => res()));
+const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
+const rAF = () => new Promise<void>((res) => requestAnimationFrame(() => res()));
 
 const usePrefersReducedMotion = () => {
   const [reduced, setReduced] = useState(false);
@@ -211,33 +191,25 @@ const usePrefersReducedMotion = () => {
   return reduced;
 };
 
-/** Add a one-shot, typed 'scrollend' listener with a timeout fallback (no `any`). */
+/** Add a one-shot, typed 'scrollend' listener with a timeout fallback */
 function addScrollEndOnce(
   element: HTMLElement,
   handler: (ev: Event) => void,
   timeoutMs = 600
 ): () => void {
   let cleaned = false;
-
   const eventListener: EventListener = (ev: Event) => {
     if (cleaned) return;
     cleaned = true;
     handler(ev);
   };
-
-  // If supported, this will fire first and remove itself via `once`
   element.addEventListener("scrollend", eventListener, { once: true });
-
-  // Fallback: ensure cleanup if 'scrollend' isn't supported
   const timeoutId = window.setTimeout(() => {
     if (cleaned) return;
     cleaned = true;
-    // run handler to keep semantics close to scrollend
     handler(new Event("scrollend"));
     element.removeEventListener("scrollend", eventListener);
   }, timeoutMs);
-
-  // Cleanup function for caller
   return () => {
     window.clearTimeout(timeoutId);
     element.removeEventListener("scrollend", eventListener);
@@ -262,10 +234,7 @@ function ServicesCoverflow({
   const [ready, setReady] = useState(false);
 
   // 3x list for infinite loop
-  const loopedServices = useMemo(
-    () => [...services, ...services, ...services],
-    [services]
-  );
+  const loopedServices = useMemo(() => [...services, ...services, ...services], [services]);
 
   // Measure slide width + gap; set CSS vars
   useEffect(() => {
@@ -276,15 +245,12 @@ function ServicesCoverflow({
       if (!track || !card || !wrap) return;
 
       const slideW = card.offsetWidth;
-
       const cs = window.getComputedStyle(track);
-      const rawGap =
-        cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
+      const rawGap = cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
       const gapMatch = rawGap.match(/([\d.]+)px/);
       const gap = gapMatch ? parseFloat(gapMatch[1]) : 0;
 
       setStep(Math.round(slideW + gap));
-
       wrap.style.setProperty("--wrapW", `${wrap.clientWidth}px`);
       wrap.style.setProperty("--slideW", `${slideW}px`);
     };
@@ -294,7 +260,6 @@ function ServicesCoverflow({
     if (cardRef.current) ro.observe(cardRef.current);
     if (trackRef.current) ro.observe(trackRef.current);
 
-    // initial measure + show
     measure();
     setReady(true);
 
@@ -308,30 +273,24 @@ function ServicesCoverflow({
 
     const third = Math.round(step * services.length);
 
-    // perf: batch reads/writes
     const updateTransforms = () => {
       if (prefersReduced) return;
       const rect = el.getBoundingClientRect();
       const center = rect.left + rect.width / 2;
       const children = Array.from(el.children) as HTMLElement[];
 
-      // READS
       const info = children.map((c) => {
         const cr = c.getBoundingClientRect();
         const near =
-          cr.right > rect.left - cr.width * 0.5 &&
-          cr.left < rect.right + cr.width * 0.5;
+          cr.right > rect.left - cr.width * 0.5 && cr.left < rect.right + cr.width * 0.5;
         return { c, cr, near };
       });
 
-      // Determine centered card for aria-current
       let closestIdx = -1;
       let closestDist = Number.POSITIVE_INFINITY;
 
-      // WRITES
       for (let i = 0; i < info.length; i++) {
         const { c, cr, near } = info[i];
-
         if (!near) {
           c.style.transform = "";
           c.style.opacity = "0.75";
@@ -370,7 +329,6 @@ function ServicesCoverflow({
       const left = el.scrollLeft;
       const nearStart = left < third * 0.5;
       const nearEnd = left > third * 1.5;
-
       if (nearStart) el.scrollLeft = left + third;
       else if (nearEnd) el.scrollLeft = left - third;
     };
@@ -399,14 +357,13 @@ function ServicesCoverflow({
 
     el.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize, { passive: true });
-
     return () => {
       el.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
   }, [services.length, step, prefersReduced]);
 
-  // Disable snap during smooth scroll; re-enable on scrollend (typed; no `any`)
+  // Disable snap during smooth scroll; re-enable on scrollend
   const withNoSnapDuring = useCallback((fn: () => void) => {
     const el = trackRef.current;
     if (!el) return;
@@ -415,7 +372,6 @@ function ServicesCoverflow({
       el.classList.remove("no-snap");
     });
     fn();
-    // cleanup auto-runs on scrollend or timeout inside helper
     return cleanup;
   }, []);
 
@@ -443,10 +399,7 @@ function ServicesCoverflow({
       }
 
       withNoSnapDuring(() => {
-        el.scrollTo({
-          left: Math.round(el.scrollLeft + delta),
-          behavior: "smooth",
-        });
+        el.scrollTo({ left: Math.round(el.scrollLeft + delta), behavior: "smooth" });
       });
     },
     [invisibleWrap, services.length, step, withNoSnapDuring]
@@ -481,7 +434,7 @@ function ServicesCoverflow({
         .cf-track {
           display: flex;
           align-items: stretch;
-          gap: 24px; /* slides have no margins */
+          gap: 24px;
           overflow-x: auto;
           scroll-snap-type: x mandatory;
           -webkit-overflow-scrolling: touch;
@@ -508,7 +461,6 @@ function ServicesCoverflow({
         .cf-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter: blur(0.2px); }
         .cf-overlay { position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.0) 20%, rgba(0,0,0,.45) 100%); }
 
-        /* Reduced motion: kill transitions/filters/tilts */
         @media (prefers-reduced-motion: reduce) {
           .cf-slide { transition: none !important; }
           .cf-track * { filter: none !important; transform: none !important; }
@@ -520,16 +472,13 @@ function ServicesCoverflow({
 
       <div
         ref={trackRef}
-        className={`cf-track transition-opacity duration-200 ${
-          ready ? "opacity-100" : "opacity-0"
-        }`}
+        className={`cf-track transition-opacity duration-200 ${ready ? "opacity-100" : "opacity-0"}`}
         aria-label="Service cards"
         role="group"
         aria-live="polite"
       >
         {loopedServices.map((s, idx) => {
-          const logicalIdx = idx % services.length;
-          const eager = idx < 2; // first two for quick visual
+          const eager = idx < 2;
           return (
             <button
               key={`${s.id}-${idx}`}
@@ -540,20 +489,18 @@ function ServicesCoverflow({
             >
               <img
                 src={s.image}
-                alt=""
+                alt={`${s.title} preview`}
                 className="cf-img"
                 loading={eager ? "eager" : "lazy"}
                 decoding="async"
                 sizes="(max-width: 768px) 300px, 360px"
                 fetchPriority={eager ? "high" : "low"}
               />
-
+              <div className="cf-overlay" aria-hidden="true" />
               <div className="absolute bottom-0 w-full p-4">
                 <div className="inline-flex items-center gap-2 rounded-2xl bg-black/55 ring-1 ring-white/15 px-3 py-2 shadow backdrop-blur-sm">
-                  <s.icon className="w-4 h-4 text-white" />
-                  <span className="text-white font-semibold text-sm">
-                    {s.title}
-                  </span>
+                  <s.icon className="w-4 h-4 text-white" aria-hidden="true" />
+                  <span className="text-white font-semibold text-sm">{s.title}</span>
                 </div>
               </div>
             </button>
@@ -589,10 +536,9 @@ function ServicesCoverflow({
 /* ----------------------------- Component ----------------------------- */
 const Services = () => {
   const [selected, setSelected] = useState<Service | null>(null);
-
   const prefersReduced = usePrefersReducedMotion();
 
-  /* ===== Modal a11y: Escape to close + lock body scroll while open ===== */
+  // Modal a11y: Escape to close + lock body scroll while open
   useEffect(() => {
     if (!selected) return;
     const onKey = (e: KeyboardEvent) => {
@@ -607,7 +553,7 @@ const Services = () => {
     };
   }, [selected]);
 
-  /* ===== Testimonials (looping + tolerant wrap) ===== */
+  // Testimonials loop
   const stripRef = useRef<HTMLDivElement | null>(null);
   const firstTCardRef = useRef<HTMLDivElement | null>(null);
   const [cardStep, setCardStep] = useState<number>(360);
@@ -620,8 +566,7 @@ const Services = () => {
 
       const cardW = firstCard.offsetWidth;
       const cs = window.getComputedStyle(track);
-      const rawGap =
-        cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
+      const rawGap = cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
       const gapMatch = rawGap.match(/([\d.]+)px/);
       const gap = gapMatch ? parseFloat(gapMatch[1]) : 0;
 
@@ -634,10 +579,7 @@ const Services = () => {
     return () => ro.disconnect();
   }, []);
 
-  const loopedTestimonials = useMemo(
-    () => [...testimonials, ...testimonials],
-    []
-  );
+  const loopedTestimonials = useMemo(() => [...testimonials, ...testimonials], []);
 
   const wrapIfNeeded = useCallback(
     async (dir: "left" | "right") => {
@@ -672,11 +614,9 @@ const Services = () => {
       const cleanup = addScrollEndOnce(el, () => {
         el.classList.remove("no-snap");
       });
-      el.scrollTo({
-        left: Math.round(el.scrollLeft + delta),
-        behavior: "smooth",
-      });
-      // `cleanup` auto-runs via scrollend or timeout fallback
+      el.scrollTo({ left: Math.round(el.scrollLeft + delta), behavior: "smooth" });
+      // cleanup auto-runs via scrollend or timeout
+      if (cleanup) void 0;
     },
     [cardStep, wrapIfNeeded]
   );
@@ -696,33 +636,24 @@ const Services = () => {
       className="glass-card p-6 rounded-2xl min-w-[320px] max-w-[360px] relative border border-white/10"
     >
       <div className="flex items-start gap-4 mb-4">
-        <div className="relative w-14 h-14">
-          <div className="relative w-14 h-14 rounded-full overflow-hidden bg-background">
-            <img
-              src={avatar}
-              alt={name}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
+        <div className="relative w-14 h-14 rounded-full overflow-hidden bg-background">
+          <img
+            src={avatar}
+            alt={`${name} - ${role}`}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-foreground">{name}</h4>
-            <div
-              className="flex items-center gap-0.5"
-              aria-label={`${rating} out of 5 stars`}
-            >
+            <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
                   size={16}
-                  className={
-                    i < rating
-                      ? "text-primary fill-current"
-                      : "text-muted-foreground"
-                  }
+                  className={i < rating ? "text-primary fill-current" : "text-muted-foreground"}
                 />
               ))}
             </div>
@@ -740,7 +671,6 @@ const Services = () => {
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Local CSS for the hero grid texture */
         .hero-grid {
           background-image:
             linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
@@ -756,38 +686,30 @@ const Services = () => {
           {/* Base image */}
           <img
             src=""
-            alt=""
+            alt="Abstract service background"
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
             decoding="async"
             fetchPriority="high"
           />
-
-          {/* White overlay with slight blur (keep small for perf) */}
-          <div
-            className="absolute inset-0 bg-white/75 backdrop-blur-[5px]"
-            style={{ willChange: "filter" }}
-          />
-
+          {/* White overlay with slight blur */}
+          <div className="absolute inset-0 bg-white/75 backdrop-blur-[5px]" aria-hidden="true" />
           {/* Subtle texture */}
-          <div className="absolute inset-0 hero-grid pointer-events-none" />
-
+          <div className="absolute inset-0 hero-grid pointer-events-none" aria-hidden="true" />
           {/* Bottom fade */}
-          <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-white" />
+          <div
+            className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-white"
+            aria-hidden="true"
+          />
         </div>
 
         <div className="container mx-auto px-6 text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={heroContainer}
-          >
+          <motion.div initial="hidden" animate="visible" variants={heroContainer}>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
               Our <span className="text-gradient">Services</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-0 px-4">
-              Comprehensive virtual tour solutions tailored to your industry
-              needs.
+              Comprehensive virtual tour solutions tailored to your industry needs.
             </p>
           </motion.div>
         </div>
@@ -810,7 +732,9 @@ const Services = () => {
             exit={{ opacity: 0 }}
           >
             {/* backdrop */}
-            <motion.div
+            <motion.button
+              type="button"
+              aria-label="Close"
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setSelected(null)}
               initial={{ opacity: 0 }}
@@ -839,19 +763,13 @@ const Services = () => {
 
               <div className="flex items-start gap-3 mb-4">
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-r from-primary to-orange-500 text-white">
-                  <selected.icon className="w-5 h-5" />
+                  <selected.icon className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3
-                    id="svc-dialog-title"
-                    className="text-xl font-bold text-foreground"
-                  >
+                  <h3 id="svc-dialog-title" className="text-xl font-bold text-muted-foreground">
                     {selected.title}
                   </h3>
-                  <p
-                    id="svc-dialog-desc"
-                    className="text-sm text-muted-foreground mt-1"
-                  >
+                  <p id="svc-dialog-desc" className="text-sm text-muted-foreground mt-1">
                     {selected.description}
                   </p>
                 </div>
@@ -890,10 +808,8 @@ const Services = () => {
         <div className="container mx-auto px-6">
           {/* Section header */}
           <div className="text-center mb-12">
-            {/* Heading with decorative lines */}
-
             <div className="flex items-center justify-center gap-2 sm:gap-3 text-center">
-              {/* Left triple bars */}
+              {/* Left bars */}
               <motion.div
                 initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
                 whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
@@ -907,14 +823,13 @@ const Services = () => {
                 <span className="w-0.5 min-w-[2px] rounded-full h-7 sm:h-8 md:h-9 bg-foreground/10" />
               </motion.div>
 
-              {/* Title */}
               <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
                 <span>What&nbsp;</span>
                 <span className="text-gradient">Our Customers</span>
                 <span>&nbsp;Say</span>
               </h2>
 
-              {/* Right triple bars */}
+              {/* Right bars */}
               <motion.div
                 initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
                 whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
@@ -929,10 +844,8 @@ const Services = () => {
               </motion.div>
             </div>
 
-            {/* Subtitle */}
             <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Real results from hotels, realtors, campuses, and venues using our
-              virtual tours.
+              Real results from hotels, realtors, campuses, and venues using our virtual tours.
             </p>
           </div>
 
@@ -946,11 +859,7 @@ const Services = () => {
               tabIndex={0}
             >
               {loopedTestimonials.map((t, i) => (
-                <TestimonialCard
-                  key={`${t.name}-${i}`}
-                  {...t}
-                  indexMarker={(i % testimonials.length) + 1}
-                />
+                <TestimonialCard key={`${t.name}-${i}`} {...t} indexMarker={(i % testimonials.length) + 1} />
               ))}
             </div>
 
