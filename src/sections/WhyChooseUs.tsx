@@ -28,10 +28,26 @@ function Stat({ number, label }: { number: string; label: string }) {
 
 const WhyChooseUs = () => {
   const benefits: Benefit[] = [
-    { icon: Award, title: "Google Standard", description: "Street View trusted & best practices" },
-    { icon: MapPin, title: "Blue Line GSV", description: "Publish connected 360° paths on Maps" },
-    { icon: Camera, title: "8K HDR Capture", description: "Crisp 360° photos & video, true-to-color" },
-    { icon: Rocket, title: "Fast Turnaround", description: "From capture to publish in days with clear milestones." },
+    {
+      icon: Award,
+      title: "Google Standard",
+      description: "Street View trusted & best practices",
+    },
+    {
+      icon: MapPin,
+      title: "Blue Line GSV",
+      description: "Publish connected 360° paths on Maps",
+    },
+    {
+      icon: Camera,
+      title: "8K HDR Capture",
+      description: "Crisp 360° photos & video, true-to-color",
+    },
+    {
+      icon: Rocket,
+      title: "Fast Turnaround",
+      description: "From capture to publish in days with clear milestones.",
+    },
   ];
 
   const features = [
@@ -103,8 +119,8 @@ const WhyChooseUs = () => {
             </h2>
 
             <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 sm:mb-8 leading-relaxed">
-              Not just photos—immersive 360° experiences that feel like a visit and turn searches
-              into enquiries, bookings, and sales.
+              Not just photos—immersive 360° experiences that feel like a visit
+              and turn searches into enquiries, bookings, and sales.
             </p>
 
             {/* Feature checklist */}
@@ -147,7 +163,10 @@ const WhyChooseUs = () => {
               aria-label="View Our Work"
             >
               <span>View Our Work</span>
-              <motion.span animate={{ x: [0, 5, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
+              <motion.span
+                animate={{ x: [0, 5, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
                 →
               </motion.span>
             </MotionLink>

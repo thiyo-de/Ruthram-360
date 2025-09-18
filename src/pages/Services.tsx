@@ -6,7 +6,12 @@ import React, {
   useCallback,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 import {
   Camera,
   Compass,
@@ -18,20 +23,20 @@ import {
   ChevronRight,
   Star,
   X,
+  BadgeCheck,
+  ArrowRight,
   type LucideIcon,
 } from "lucide-react";
+import { Link } from "react-router-dom";
+
+/* ---------- Assets (use your existing files) ---------- */
 import Service_BG from "../Assets/Service.jpg";
 import VR_Tourism from "../Assets/VR_Tourism.jpg";
-import ProcessStrip from "@/components/ProcessStrip";
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-const MotionLink = motion(Link);
 import VR1 from "../Assets/VR1.jpg";
 import GSV_IMG from "../Assets/GSV.jpg";
 import PHOTO_360 from "../Assets/360_PHOTO.jpg";
 import DRONE from "../Assets/DRONE.jpg";
 import VIDEO_360 from "../Assets/VIDEO_360.jpg";
-
 import AU1 from "../Assets/AU.jpg";
 import MSU1 from "../Assets/MSU.jpg";
 import SONACT from "../Assets/SONACT.jpg";
@@ -39,8 +44,13 @@ import TPC from "../Assets/TPC.jpg";
 import TREAT from "../Assets/TREAT MSME.jpg";
 import DSCE1 from "../Assets/DSCE1.jpeg";
 import AU_Museum from "../Assets/Vallal Dr. Alagappar Museum.jpg";
+import ProcessStrip from "@/components/ProcessStrip";
 
-/* ----------------------------- Types ----------------------------- */
+const MotionLink = motion(Link);
+
+/* =========================================================
+   Types & Data
+========================================================= */
 type Service = {
   id: string;
   icon: LucideIcon;
@@ -51,7 +61,17 @@ type Service = {
   popular?: boolean;
 };
 
-/* ----------------------------- Data ----------------------------- */
+type ServicesHeroProps = {
+  background: string; // bg image
+  eyebrow?: string; // default: "Services"
+  headline?: string; // default: "Virtual Tours that Convert"
+  subcopy?: string; // default: "8K capture…"
+  chips?: string[]; // default: ["8K Quality","Interactive Hotspots","48-Hour Delivery"]
+  minHeightClass?: string; // optional: override height
+};
+
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 const allServices: Service[] = [
   {
     id: "svc-virtual-tours",
@@ -69,7 +89,11 @@ const allServices: Service[] = [
     title: "360 Degree 3D Tour",
     description:
       "Immersive 360° 3D virtual tours that allow your audience to explore spaces interactively with a real sense of presence.",
-    features: ["Immersive 3D Experience", "Interactive Navigation", "Boosts Engagement"],
+    features: [
+      "Immersive 3D Experience",
+      "Interactive Navigation",
+      "Boosts Engagement",
+    ],
     image: VR_Tourism,
   },
   {
@@ -78,7 +102,12 @@ const allServices: Service[] = [
     title: "Google Street View",
     description:
       "Professional Google Street View imagery to boost your local search presence and discovery.",
-    features: ["Google Standard", "SEO Benefits", "Local Discovery", "Business Listings"],
+    features: [
+      "Google Standard",
+      "SEO Benefits",
+      "Local Discovery",
+      "Business Listings",
+    ],
     image: GSV_IMG,
   },
   {
@@ -96,7 +125,11 @@ const allServices: Service[] = [
     title: "360° Aerial Video (Drone)",
     description:
       "Showcase scale, routes, and surroundings with breathtaking overhead 360° motion footage.",
-    features: ["Planned & compliant flights", "Cinematic paths", "5.7K Exports"],
+    features: [
+      "Planned & compliant flights",
+      "Cinematic paths",
+      "5.7K Exports",
+    ],
     image: DRONE,
   },
   {
@@ -105,7 +138,11 @@ const allServices: Service[] = [
     title: "360° Videography & Immersive",
     description:
       "Walk-through 360° videos with interactive hotspots, chapters, and CTAs to drive engagement and leads.",
-    features: ["Stabilized Motion", "Interactive Overlays", "YouTube/Meta VR Ready"],
+    features: [
+      "Stabilized Motion",
+      "Interactive Overlays",
+      "YouTube/Meta VR Ready",
+    ],
     image: VIDEO_360,
   },
 ];
@@ -169,55 +206,198 @@ const testimonials = [
   },
 ];
 
-/* ----------------------------- Variants ----------------------------- */
-const heroContainer: Variants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+/* =========================================================
+   Shared Animation / Utilities
+========================================================= */
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+const wordVariants: Variants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 320, damping: 26 },
+  },
 };
 
-/* ------------------------ Helpers ------------------------ */
-const clamp = (v: number, min: number, max: number) => Math.min(max, Math.max(min, v));
-const rAF = () => new Promise<void>((res) => requestAnimationFrame(() => res()));
-
-const usePrefersReducedMotion = () => {
-  const [reduced, setReduced] = useState(false);
+function useCountUp(to: number, duration = 1200) {
+  const prefersReduced = useReducedMotion();
+  const [value, setValue] = useState(0);
   useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduced(mq.matches);
-    setReduced(mq.matches);
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
-  }, []);
-  return reduced;
-};
+    if (prefersReduced) {
+      setValue(to);
+      return;
+    }
+    let raf = 0;
+    let start: number | null = null;
+    const step = (t: number) => {
+      if (start === null) start = t;
+      const p = Math.min(1, (t - start) / duration);
+      setValue(Math.round(to * p));
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, duration, prefersReduced]);
+  return value;
+}
+const rAF = () =>
+  new Promise<void>((res) => requestAnimationFrame(() => res()));
+const clamp = (v: number, min: number, max: number) =>
+  Math.min(max, Math.max(min, v));
 
-/** Add a one-shot, typed 'scrollend' listener with a timeout fallback */
-function addScrollEndOnce(
-  element: HTMLElement,
-  handler: (ev: Event) => void,
-  timeoutMs = 600
-): () => void {
-  let cleaned = false;
-  const eventListener: EventListener = (ev: Event) => {
-    if (cleaned) return;
-    cleaned = true;
-    handler(ev);
-  };
-  element.addEventListener("scrollend", eventListener, { once: true });
-  const timeoutId = window.setTimeout(() => {
-    if (cleaned) return;
-    cleaned = true;
-    handler(new Event("scrollend"));
-    element.removeEventListener("scrollend", eventListener);
-  }, timeoutMs);
-  return () => {
-    window.clearTimeout(timeoutId);
-    element.removeEventListener("scrollend", eventListener);
-    cleaned = true;
-  };
+/* =========================================================
+   Services Hero (Banner Style + Bottom Fade) — refined
+========================================================= */
+function ServicesHero() {
+  const prefersReduced = useReducedMotion();
+
+  const words = ["Our", "Services"];
+
+  const floaters = useMemo(
+    () =>
+      Array.from({ length: 18 }).map((_, i) => ({
+        id: i,
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        duration: 3 + Math.random() * 2,
+        delay: Math.random() * 2,
+      })),
+    []
+  );
+
+  return (
+    <section
+      className="relative min-h-[50vh] md:min-h-[55vh] flex items-center justify-center overflow-hidden
+                 pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-16"
+      aria-labelledby="svc-hero-title"
+    >
+      {/* Background image */}
+      <div
+        className="absolute inset-0 -z-20 bg-cover bg-center"
+        // tip: adjust position to keep subject clear of the strongest overlay area
+        // className="absolute inset-0 -z-20 bg-cover bg-[position:50%_30%]"
+        style={{ backgroundImage: `url(${Service_BG})` }}
+        aria-hidden
+      />
+
+      {/* Blur + overlay */}
+      <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+        <div className="absolute -inset-8 md:opacity-60 opacity-40 blur-2xl">
+          <div
+            className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full 
+                          bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]"
+          />
+          <div
+            className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full 
+                          bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]"
+          />
+        </div>
+      </div>
+
+      {/* Subtle dot texture */}
+      <div
+        className="absolute inset-0 -z-10 md:opacity-30 opacity-20 mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E\")",
+        }}
+        aria-hidden
+      />
+
+      {/* Floating particles */}
+      {!prefersReduced && (
+        <div className="pointer-events-none absolute inset-0">
+          {floaters.map((f) => (
+            <motion.div
+              key={f.id}
+              className="absolute w-1 h-1 md:w-1.5 md:h-1.5 bg-primary/30 rounded-full"
+              style={{ left: f.left, top: f.top }}
+              animate={{ y: [0, -30, 0], opacity: [0.3, 1, 0.3] }}
+              transition={{
+                duration: f.duration,
+                repeat: Infinity,
+                delay: f.delay,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Content */}
+      <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 text-center">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.35 }}
+          className="mx-auto max-w-[900px]"
+        >
+          {/* Eyebrow */}
+          <motion.span
+            variants={wordVariants}
+            className="inline-flex mb-2 items-center gap-2 rounded-full px-3 py-1 text-xs font-medium 
+                       bg-black/5 text-muted-foreground ring-1 ring-foreground/10 backdrop-blur"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+            Services
+          </motion.span>
+
+          {/* Headline (semantic h1, visible) */}
+          <h1 id="svc-hero-title" className="sr-only">
+            Our Services
+          </h1>
+          <div className="mb-4 sm:mb-6">
+            <div className="flex flex-wrap justify-center items-center gap-2 mb-2">
+              {words.map((word, index) => (
+                <motion.span
+                  key={index}
+                  variants={wordVariants}
+                  className={[
+                    "font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight",
+                    word === "Services"
+                      ? "text-gradient"
+                      : "text-muted-foreground",
+                  ].join(" ")}
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </div>
+          </div>
+
+          {/* Subcopy */}
+          <motion.p
+            variants={wordVariants}
+            transition={{ duration: 0.6, delay: 0.25 }}
+            className="mx-auto max-w-[42rem] text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed"
+          >
+            Comprehensive virtual tour solutions tailored to your industry
+            needs.
+          </motion.p>
+        </motion.div>
+      </div>
+
+      {/* Bottom fade */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-96 z-0
+                   bg-gradient-to-b from-transparent via-white/40 to-white"
+        aria-hidden
+      />
+    </section>
+  );
 }
 
-/* ------------------- Services Coverflow (Looping) ------------------- */
+/* =========================================================
+   Services Coverflow (looping)
+========================================================= */
 function ServicesCoverflow({
   services,
   onSelect,
@@ -225,7 +405,7 @@ function ServicesCoverflow({
   services: Service[];
   onSelect: (s: Service) => void;
 }) {
-  const prefersReduced = usePrefersReducedMotion();
+  const prefersReduced = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const cardRef = useRef<HTMLButtonElement | null>(null);
@@ -233,45 +413,41 @@ function ServicesCoverflow({
   const [step, setStep] = useState<number>(360);
   const [ready, setReady] = useState(false);
 
-  // 3x list for infinite loop
-  const loopedServices = useMemo(() => [...services, ...services, ...services], [services]);
+  const loopedServices = useMemo(
+    () => [...services, ...services, ...services],
+    [services]
+  );
 
-  // Measure slide width + gap; set CSS vars
   useEffect(() => {
     const measure = () => {
-      const track = trackRef.current;
-      const card = cardRef.current;
-      const wrap = wrapRef.current;
+      const track = trackRef.current,
+        card = cardRef.current,
+        wrap = wrapRef.current;
       if (!track || !card || !wrap) return;
-
       const slideW = card.offsetWidth;
       const cs = window.getComputedStyle(track);
-      const rawGap = cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
+      const rawGap =
+        cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
       const gapMatch = rawGap.match(/([\d.]+)px/);
       const gap = gapMatch ? parseFloat(gapMatch[1]) : 0;
-
       setStep(Math.round(slideW + gap));
       wrap.style.setProperty("--wrapW", `${wrap.clientWidth}px`);
       wrap.style.setProperty("--slideW", `${slideW}px`);
     };
-
     const ro = new ResizeObserver(measure);
     if (wrapRef.current) ro.observe(wrapRef.current);
     if (cardRef.current) ro.observe(cardRef.current);
     if (trackRef.current) ro.observe(trackRef.current);
-
     measure();
     setReady(true);
-
     return () => ro.disconnect();
   }, []);
 
-  // Initial centering, transforms, and infinite re-centering
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
 
-    const third = Math.round(step * services.length);
+    const third = Math.round(step * allServices.length);
 
     const updateTransforms = () => {
       if (prefersReduced) return;
@@ -282,7 +458,8 @@ function ServicesCoverflow({
       const info = children.map((c) => {
         const cr = c.getBoundingClientRect();
         const near =
-          cr.right > rect.left - cr.width * 0.5 && cr.left < rect.right + cr.width * 0.5;
+          cr.right > rect.left - cr.width * 0.5 &&
+          cr.left < rect.right + cr.width * 0.5;
         return { c, cr, near };
       });
 
@@ -298,7 +475,6 @@ function ServicesCoverflow({
           c.removeAttribute("aria-current");
           continue;
         }
-
         const cardCenter = cr.left + cr.width / 2;
         const dist = (cardCenter - center) / cr.width;
         const ad = Math.abs(dist);
@@ -306,12 +482,10 @@ function ServicesCoverflow({
           closestDist = ad;
           closestIdx = i;
         }
-
         const scale = clamp(1 - 0.1 * ad, 0.9, 1);
         const rotateY = clamp(-12 * dist, -12, 12);
         const opacity = clamp(1 - 0.35 * ad, 0.65, 1);
         const blur = clamp(0.5 * ad, 0, 0.5);
-
         c.style.transform = `translate3d(0,0,0) scale(${scale}) rotateY(${rotateY}deg)`;
         c.style.opacity = String(opacity);
         c.style.filter = blur > 0.05 ? `blur(${blur}px)` : "none";
@@ -361,9 +535,8 @@ function ServicesCoverflow({
       el.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
     };
-  }, [services.length, step, prefersReduced]);
+  }, [step, prefersReduced]);
 
-  // Disable snap during smooth scroll; re-enable on scrollend
   const withNoSnapDuring = useCallback((fn: () => void) => {
     const el = trackRef.current;
     if (!el) return;
@@ -374,7 +547,6 @@ function ServicesCoverflow({
     fn();
     return cleanup;
   }, []);
-
   const invisibleWrap = useCallback(async (jump: number) => {
     const el = trackRef.current;
     if (!el) return;
@@ -383,12 +555,11 @@ function ServicesCoverflow({
     await rAF();
     el.classList.remove("no-snap");
   }, []);
-
   const go = useCallback(
     async (dir: "left" | "right") => {
       const el = trackRef.current;
       if (!el) return;
-      const third = Math.round(step * services.length);
+      const third = Math.round(step * allServices.length);
       const current = el.scrollLeft;
       const delta = dir === "left" ? -step : step;
 
@@ -399,12 +570,14 @@ function ServicesCoverflow({
       }
 
       withNoSnapDuring(() => {
-        el.scrollTo({ left: Math.round(el.scrollLeft + delta), behavior: "smooth" });
+        el.scrollTo({
+          left: Math.round(el.scrollLeft + delta),
+          behavior: "smooth",
+        });
       });
     },
-    [invisibleWrap, services.length, step, withNoSnapDuring]
+    [invisibleWrap, step, withNoSnapDuring]
   );
-
   const onKeyDown = useCallback(
     (e: ReactKeyboardEvent<HTMLDivElement>) => {
       if (e.key === "ArrowLeft") {
@@ -429,50 +602,32 @@ function ServicesCoverflow({
     >
       <style>{`
         .no-snap { scroll-snap-type: none !important; }
-
-        /* Track */
         .cf-track {
-          display: flex;
-          align-items: stretch;
-          gap: 24px;
-          overflow-x: auto;
-          scroll-snap-type: x mandatory;
-          -webkit-overflow-scrolling: touch;
-          scrollbar-width: none;
-          overscroll-behavior-x: contain;
-          padding-block: 8px;
-          padding-inline: max(calc((var(--wrapW, 100%) - var(--slideW, 340px)) / 2), 16px);
+          display:flex; align-items:stretch; gap:24px; overflow-x:auto;
+          scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+          scrollbar-width:none; overscroll-behavior-x:contain;
+          padding-block:8px;
+          padding-inline:max(calc((var(--wrapW,100%) - var(--slideW,340px)) / 2),16px);
         }
-        .cf-track::-webkit-scrollbar { display: none; }
-
-        /* Slide */
+        .cf-track::-webkit-scrollbar { display:none; }
         .cf-slide {
-          width: var(--slideW, 340px);
-          aspect-ratio: 9 / 16;
-          scroll-snap-align: center;
+          width:var(--slideW,340px); aspect-ratio:9/16; scroll-snap-align:center;
           transition: transform .25s cubic-bezier(.22,1,.36,1), box-shadow .25s, opacity .25s, filter .25s;
-          border-radius: 28px;
-          overflow: hidden;
-          background: #000;
-          box-shadow: 0 10px 30px rgba(0,0,0,.08);
-          contain: content;
-          will-change: transform, opacity, filter;
+          border-radius:28px; overflow:hidden; background:#000; box-shadow:0 10px 30px rgba(0,0,0,.08);
+          contain:content; will-change:transform, opacity, filter;
         }
-        .cf-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter: blur(0.2px); }
-        .cf-overlay { position:absolute; inset:0; background: linear-gradient(180deg, rgba(0,0,0,0.0) 20%, rgba(0,0,0,.45) 100%); }
-
-        @media (prefers-reduced-motion: reduce) {
-          .cf-slide { transition: none !important; }
-          .cf-track * { filter: none !important; transform: none !important; }
-        }
-
-        @media (max-width: 767px) { .cf-wrap { --slideW: 300px; } }
-        @media (min-width: 768px) { .cf-wrap { --slideW: 360px; } }
+        .cf-img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(.2px); }
+        .cf-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.0) 20%, rgba(0,0,0,.45) 100%); }
+        @media (prefers-reduced-motion: reduce) { .cf-slide{transition:none!important} .cf-track *{filter:none!important; transform:none!important} }
+        @media (max-width:767px){ .cf-wrap{ --slideW:300px } }
+        @media (min-width:768px){ .cf-wrap{ --slideW:360px } }
       `}</style>
 
       <div
         ref={trackRef}
-        className={`cf-track transition-opacity duration-200 ${ready ? "opacity-100" : "opacity-0"}`}
+        className={`cf-track transition-opacity duration-200 ${
+          ready ? "opacity-100" : "opacity-0"
+        }`}
         aria-label="Service cards"
         role="group"
         aria-live="polite"
@@ -500,7 +655,9 @@ function ServicesCoverflow({
               <div className="absolute bottom-0 w-full p-4">
                 <div className="inline-flex items-center gap-2 rounded-2xl bg-black/55 ring-1 ring-white/15 px-3 py-2 shadow backdrop-blur-sm">
                   <s.icon className="w-4 h-4 text-white" aria-hidden="true" />
-                  <span className="text-white font-semibold text-sm">{s.title}</span>
+                  <span className="text-white font-semibold text-sm">
+                    {s.title}
+                  </span>
                 </div>
               </div>
             </button>
@@ -533,12 +690,40 @@ function ServicesCoverflow({
   );
 }
 
-/* ----------------------------- Component ----------------------------- */
+/* Utility: scrollend once with timeout fallback */
+function addScrollEndOnce(
+  element: HTMLElement,
+  handler: (ev: Event) => void,
+  timeoutMs = 600
+) {
+  let cleaned = false;
+  const listener: EventListener = (ev) => {
+    if (cleaned) return;
+    cleaned = true;
+    handler(ev);
+  };
+  element.addEventListener("scrollend", listener, { once: true });
+  const timeoutId = window.setTimeout(() => {
+    if (cleaned) return;
+    cleaned = true;
+    handler(new Event("scrollend"));
+    element.removeEventListener("scrollend", listener);
+  }, timeoutMs);
+  return () => {
+    window.clearTimeout(timeoutId);
+    element.removeEventListener("scrollend", listener);
+    cleaned = true;
+  };
+}
+
+/* =========================================================
+   Page Component
+========================================================= */
 const Services = () => {
   const [selected, setSelected] = useState<Service | null>(null);
-  const prefersReduced = usePrefersReducedMotion();
+  const prefersReduced = useReducedMotion();
 
-  // Modal a11y: Escape to close + lock body scroll while open
+  // Modal a11y + body lock
   useEffect(() => {
     if (!selected) return;
     const onKey = (e: KeyboardEvent) => {
@@ -553,23 +738,22 @@ const Services = () => {
     };
   }, [selected]);
 
-  // Testimonials loop
+  // Testimonials strip
   const stripRef = useRef<HTMLDivElement | null>(null);
   const firstTCardRef = useRef<HTMLDivElement | null>(null);
   const [cardStep, setCardStep] = useState<number>(360);
 
   useEffect(() => {
     const measure = () => {
-      const track = stripRef.current;
-      const firstCard = firstTCardRef.current;
+      const track = stripRef.current,
+        firstCard = firstTCardRef.current;
       if (!track || !firstCard) return;
-
       const cardW = firstCard.offsetWidth;
       const cs = window.getComputedStyle(track);
-      const rawGap = cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
+      const rawGap =
+        cs.getPropertyValue("gap") || cs.getPropertyValue("column-gap") || "0";
       const gapMatch = rawGap.match(/([\d.]+)px/);
       const gap = gapMatch ? parseFloat(gapMatch[1]) : 0;
-
       setCardStep(Math.round(cardW + gap));
     };
     const ro = new ResizeObserver(measure);
@@ -579,7 +763,10 @@ const Services = () => {
     return () => ro.disconnect();
   }, []);
 
-  const loopedTestimonials = useMemo(() => [...testimonials, ...testimonials], []);
+  const loopedTestimonials = useMemo(
+    () => [...testimonials, ...testimonials],
+    []
+  );
 
   const wrapIfNeeded = useCallback(
     async (dir: "left" | "right") => {
@@ -587,7 +774,6 @@ const Services = () => {
       if (!el) return;
       const halfway = Math.round(cardStep * testimonials.length);
       const left = el.scrollLeft;
-
       if (dir === "left" && left < cardStep * 0.5) {
         el.classList.add("no-snap");
         el.scrollLeft = left + halfway;
@@ -609,13 +795,14 @@ const Services = () => {
       if (!el) return;
       await wrapIfNeeded(dir);
       const delta = dir === "left" ? -cardStep : cardStep;
-
       el.classList.add("no-snap");
       const cleanup = addScrollEndOnce(el, () => {
         el.classList.remove("no-snap");
       });
-      el.scrollTo({ left: Math.round(el.scrollLeft + delta), behavior: "smooth" });
-      // cleanup auto-runs via scrollend or timeout
+      el.scrollTo({
+        left: Math.round(el.scrollLeft + delta),
+        behavior: "smooth",
+      });
       if (cleanup) void 0;
     },
     [cardStep, wrapIfNeeded]
@@ -648,12 +835,19 @@ const Services = () => {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <h4 className="font-bold text-foreground">{name}</h4>
-            <div className="flex items-center gap-0.5" aria-label={`${rating} out of 5 stars`}>
+            <div
+              className="flex items-center gap-0.5"
+              aria-label={`${rating} out of 5 stars`}
+            >
               {Array.from({ length: 5 }).map((_, i) => (
                 <Star
                   key={i}
                   size={16}
-                  className={i < rating ? "text-primary fill-current" : "text-muted-foreground"}
+                  className={
+                    i < rating
+                      ? "text-primary fill-current"
+                      : "text-muted-foreground"
+                  }
                 />
               ))}
             </div>
@@ -670,53 +864,13 @@ const Services = () => {
       <style>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        .hero-grid {
-          background-image:
-            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
-          background-size: 48px 48px;
-        }
       `}</style>
 
       {/* ===== Hero ===== */}
-      <section className="relative pt-48 pb-24 overflow-hidden">
-        {/* Background layers (behind content) */}
-        <div className="absolute inset-0 -z-10">
-          {/* Base image */}
-          <img
-            src=""
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-          {/* White overlay with slight blur */}
-          <div className="absolute inset-0 bg-white/75 backdrop-blur-[5px]" aria-hidden="true" />
-          {/* Subtle texture */}
-          <div className="absolute inset-0 hero-grid pointer-events-none" aria-hidden="true" />
-          {/* Bottom fade */}
-          <div
-            className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-white"
-            aria-hidden="true"
-          />
-        </div>
-
-        <div className="container mx-auto px-6 text-center">
-          <motion.div initial="hidden" animate="visible" variants={heroContainer}>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
-              Our <span className="text-gradient">Services</span>
-            </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-0 px-4">
-              Comprehensive virtual tour solutions tailored to your industry needs.
-            </p>
-          </motion.div>
-        </div>
-      </section>
+      <ServicesHero />
 
       {/* ===== Services Coverflow ===== */}
-      <section className="py-4">
+      <section id="services-coverflow" className="pt-6 pb-10">
         <div className="container mx-auto px-6">
           <ServicesCoverflow services={allServices} onSelect={setSelected} />
         </div>
@@ -731,7 +885,6 @@ const Services = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            {/* backdrop */}
             <motion.button
               type="button"
               aria-label="Close"
@@ -741,7 +894,6 @@ const Services = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
             />
-            {/* dialog */}
             <motion.div
               role="dialog"
               aria-modal="true"
@@ -766,10 +918,16 @@ const Services = () => {
                   <selected.icon className="w-5 h-5" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 id="svc-dialog-title" className="text-xl font-bold text-muted-foreground">
+                  <h3
+                    id="svc-dialog-title"
+                    className="text-xl font-bold text-muted-foreground"
+                  >
                     {selected.title}
                   </h3>
-                  <p id="svc-dialog-desc" className="text-sm text-muted-foreground mt-1">
+                  <p
+                    id="svc-dialog-desc"
+                    className="text-sm text-muted-foreground mt-1"
+                  >
                     {selected.description}
                   </p>
                 </div>
@@ -801,51 +959,49 @@ const Services = () => {
         )}
       </AnimatePresence>
 
+      {/* ===== Workflow / ProcessStrip (your component) ===== */}
       <ProcessStrip />
 
       {/* ===== Testimonials ===== */}
       <section className="py-24">
         <div className="container mx-auto px-6">
-          {/* Section header */}
+          {/* Header */}
           <div className="text-center mb-12">
-            <div className="flex items-center justify-center gap-2 sm:gap-3 text-center">
-              {/* Left bars */}
+            <div className="flex items-center justify-center gap-2 sm:gap-3">
               <motion.div
                 initial={{ opacity: 0, x: -12, scaleY: 0.9 }}
                 whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
                 viewport={{ once: true, amount: 0.6 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
-                className="flex items-center gap-1.5 sm:gap-2"
+                className="flex items-center gap-2"
                 aria-hidden="true"
               >
-                <span className="w-0.5 min-w-[2px] rounded-full h-3 sm:h-3.5 md:h-4 bg-foreground/10" />
-                <span className="w-0.5 min-w-[2px] rounded-full h-5 sm:h-6 md:h-7 bg-foreground/10" />
-                <span className="w-0.5 min-w-[2px] rounded-full h-7 sm:h-8 md:h-9 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-4 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-7 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-9 bg-foreground/10" />
               </motion.div>
 
-              <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
-                <span>What&nbsp;</span>
-                <span className="text-gradient">Our Customers</span>
-                <span>&nbsp;Say</span>
+              <h2 className="font-heading font-bold tracking-tight leading-none text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground">
+                What <span className="text-gradient">Our Customers</span> Say
               </h2>
 
-              {/* Right bars */}
               <motion.div
                 initial={{ opacity: 0, x: 12, scaleY: 0.9 }}
                 whileInView={{ opacity: 1, x: 0, scaleY: 1 }}
                 viewport={{ once: true, amount: 0.6 }}
                 transition={{ duration: 0.45, ease: "easeOut", delay: 0.05 }}
-                className="flex items-center gap-1.5 sm:gap-2"
+                className="flex items-center gap-2"
                 aria-hidden="true"
               >
-                <span className="w-0.5 min-w-[2px] rounded-full h-7 sm:h-8 md:h-9 bg-foreground/10" />
-                <span className="w-0.5 min-w-[2px] rounded-full h-5 sm:h-6 md:h-7 bg-foreground/10" />
-                <span className="w-0.5 min-w-[2px] rounded-full h-3 sm:h-3.5 md:h-4 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-9 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-7 bg-foreground/10" />
+                <span className="w-0.5 min-w-[2px] rounded-full h-4 bg-foreground/10" />
               </motion.div>
             </div>
 
             <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
-              Real results from hotels, realtors, campuses, and venues using our virtual tours.
+              Real results from hotels, realtors, campuses, and venues using our
+              virtual tours.
             </p>
           </div>
 
@@ -859,7 +1015,11 @@ const Services = () => {
               tabIndex={0}
             >
               {loopedTestimonials.map((t, i) => (
-                <TestimonialCard key={`${t.name}-${i}`} {...t} indexMarker={(i % testimonials.length) + 1} />
+                <TestimonialCard
+                  key={`${t.name}-${i}`}
+                  {...t}
+                  indexMarker={(i % testimonials.length) + 1}
+                />
               ))}
             </div>
 

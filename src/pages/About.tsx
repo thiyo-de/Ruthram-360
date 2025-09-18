@@ -9,7 +9,8 @@ import {
   Zap,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import About_us from "../Assets/About_us.jpg";
+import About_us from "../Assets/About.jpg";
+import About_us_img from "../Assets/About_us.jpg";
 
 const MotionLink = motion(Link);
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
@@ -58,86 +59,124 @@ const AboutPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b">
-      {/* ===== Hero (Contact-style) with LIMITED background band ===== */}
-      <section className="relative pt-48 pb-12 overflow-hidden">
-        {/* Only a top band gets the texture/blur; rest stays clean */}
-        <div className="absolute inset-x-0 top-0 h-[220px] sm:h-[260px] md:h-[300px] -z-10">
-          <img
-            src=""
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-white/85 backdrop-blur-[6px]" />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px)",
-              backgroundSize: "48px 48px",
-            }}
-          />
-          <div className="absolute inset-x-0 bottom-0 h-16 sm:h-20 bg-gradient-to-b from-transparent to-white" />
+      <section
+        className="relative min-h-[50vh] md:min-h-[55vh] flex items-center justify-center overflow-hidden
+             pt-24 md:pt-28 lg:pt-32 pb-12 md:pb-16"
+        aria-labelledby="about-hero-title"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 -z-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${About_us})` }}
+          aria-hidden
+        />
+
+        {/* Blur + soft white veil + subtle blobs */}
+        <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          <div className="absolute -inset-8 md:opacity-60 opacity-40 blur-2xl">
+            <div
+              className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full
+                      bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]"
+            />
+            <div
+              className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full
+                      bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]"
+            />
+          </div>
         </div>
 
-        <div className="container mx-auto px-6 text-center">
+        {/* Dot texture like Services */}
+        <div
+          className="absolute inset-0 -z-10 md:opacity-30 opacity-20 mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E\")",
+          }}
+          aria-hidden
+        />
+
+        {/* Content INSIDE the banner */}
+        <div className="relative z-10 w-full px-6 text-center">
           <motion.div
-            initial={{ opacity: 0, y: 28 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE }}
-            className="max-w-3xl mx-auto"
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="mx-auto max-w-[900px]"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-muted-foreground mb-5">
-              About <span className="text-gradient">Ruthram360</span>
+            {/* eyebrow */}
+            <span
+              className="inline-flex mb-2 items-center gap-2 rounded-full px-3 py-1 text-xs font-medium 
+                       bg-black/5 text-muted-foreground ring-1 ring-foreground/10 backdrop-blur"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+              About
+            </span>
+
+            {/* headline */}
+            <h1 id="about-hero-title" className="sr-only">
+              About Ruthram360
             </h1>
-            <p className="text-lg sm:text-xl text-zinc-600 leading-relaxed">
+            <div className="mb-4 sm:mb-6">
+              <span className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-muted-foreground">
+                About{" "}
+              </span>
+              <span className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-gradient">
+                Ruthram360
+              </span>
+            </div>
+
+            {/* subcopy */}
+            <p className="mx-auto max-w-[42rem] text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">
               We’re visual storytellers—turning spaces into immersive
               experiences that captivate, engage, and convert. Founded in 2019,
               we’ve grown into a leading virtual tour partner across education,
               real estate, hospitality, and more.
             </p>
           </motion.div>
+        </div>
 
-          {/* Image card under the title/subtext */}
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: EASE, delay: 0.05 }}
-            className="mt-10 sm:mt-12 max-w-5xl mx-auto"
-          >
-            <div className="relative rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5 group">
-              <img
-                src={About_us}
-                alt="About Ruthram360"
-                className="w-full h-[340px] sm:h-[420px] md:h-[480px] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
-            </div>
+        {/* Bottom fade into the page */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-96 z-0
+               bg-gradient-to-b from-transparent via-white/55 to-white"
+          aria-hidden
+        />
+      </section>
 
-            {/* === Replaced stat card -> Mission card (same glossy style) === */}
-            <div className="mt-6 max-w-2xl mx-auto">
-              <div
-                className="rounded-2xl px-6 py-6 text-center ring-1 ring-black/5 bg-white/80 backdrop-blur-md shadow-[0_1px_0_0_rgba(255,255,255,.6)_inset,0_12px_24px_-12px_rgba(0,0,0,.15)]"
-                style={{
-                  backgroundImage:
-                    "radial-gradient(120% 140% at 10% 0%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.75) 60%, rgba(255,255,255,.65) 100%)",
-                }}
-              >
-                <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-muted-foreground">
-                  Our Mission
-                </h3>
-                <p className="mt-2 text-sm sm:text-base text-zinc-600 leading-relaxed">
-                  To revolutionize how businesses showcase their spaces through
-                  cutting-edge virtual tour technology, creating immersive
-                  experiences that drive engagement and results.
-                </p>
-              </div>
+      <section className="pt-10 sm:pt-12 pb-14">
+        <div className="container mx-auto px-6 max-w-5xl">
+          <div className="relative rounded-3xl overflow-hidden shadow-xl ring-1 ring-black/5 group">
+            <img
+              src={About_us_img}
+              alt="About Ruthram360"
+              className="w-full h-[340px] sm:h-[420px] md:h-[480px] object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
+          </div>
+
+          {/* Mission card (unchanged) */}
+          <div className="mt-6 max-w-2xl mx-auto">
+            <div
+              className="rounded-2xl px-6 py-6 text-center ring-1 ring-black/5 bg-white/80 backdrop-blur-md
+                   shadow-[0_1px_0_0_rgba(255,255,255,.6)_inset,0_12px_24px_-12px_rgba(0,0,0,.15)]"
+              style={{
+                backgroundImage:
+                  "radial-gradient(120% 140% at 10% 0%, rgba(255,255,255,.9) 0%, rgba(255,255,255,.75) 60%, rgba(255,255,255,.65) 100%)",
+              }}
+            >
+              <h3 className="text-xl sm:text-2xl font-bold tracking-tight text-muted-foreground">
+                Our Mission
+              </h3>
+              <p className="mt-2 text-sm sm:text-base text-zinc-600 leading-relaxed">
+                To revolutionize how businesses showcase their spaces through
+                cutting-edge virtual tour technology, creating immersive
+                experiences that drive engagement and results.
+              </p>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -393,7 +432,10 @@ const AboutPage = () => {
                   className="glass-card bg-white p-5 sm:p-6 rounded-2xl ring-1 ring-border shadow-sm"
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  <CheckCircle size={48} className="text-primary mb-3.5 sm:mb-4" />
+                  <CheckCircle
+                    size={48}
+                    className="text-primary mb-3.5 sm:mb-4"
+                  />
                   <h3 className="text-base md:text-lg font-bold text-muted-foreground mb-1.5">
                     Guaranteed
                   </h3>

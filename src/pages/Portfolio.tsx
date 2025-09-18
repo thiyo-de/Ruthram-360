@@ -7,7 +7,7 @@ import {
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ExternalLink, X, Check } from "lucide-react";
-import Service_BG from "../Assets/Service.jpg";
+import Service_BG from "../Assets/Portfolio.jpg";
 import Blog from "@/components/blog";
 
 /* ---------- Client Logos (replace with your assets as needed) ---------- */
@@ -1075,64 +1075,109 @@ const PortfolioPage = () => {
     <div className="min-h-screen">
       {/* Hero */}
 
-      <section className="relative pt-48 sm:pt-44 md:pt-48 pb-16 sm:pb-20 md:pb-24 overflow-hidden">
-        {/* Local CSS for the grid texture (denser + higher contrast) */}
-        <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      {/* Hero (Banner-style, same as ServicesHero) */}
+      <section
+        className="relative min-h-[50vh] md:min-h-[55vh] flex items-center justify-center overflow-hidden
+             pt-28 md:pt-32 pb-12 md:pb-16"
+        aria-labelledby="portfolio-hero-title"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 -z-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${Service_BG})` }}
+          aria-hidden
+        />
 
-        /* Local CSS for the hero grid texture */
-        .hero-grid {
-          background-image:
-            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
-          background-size: 48px 48px;
-        }
-      `}</style>
-
-        {/* Background layers (behind content) */}
-        <div className="absolute inset-0 -z-10">
-          {/* Base image (use any; this one is just to validate contrast) */}
-          <img
-            src=""
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-
-          {/* Theme-aware overlay with slight blur */}
-          <div
-            className="absolute inset-0 bg-background/75 backdrop-blur-[5px]"
-            style={{ willChange: "filter" }}
-          />
-
-          {/* Subtle grid texture (now stronger/denser) */}
-          <div className="absolute inset-0 z-0 hero-grid pointer-events-none" />
-
-          {/* Bottom fade (theme-aware) */}
-          <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-background" />
+        {/* Blur + overlay (light, readable) */}
+        <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          {/* Gradient blobs (subtle) */}
+          <div className="absolute -inset-8 md:opacity-60 opacity-40 blur-2xl">
+            <div
+              className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full 
+                      bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]"
+            />
+            <div
+              className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full 
+                      bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]"
+            />
+          </div>
         </div>
 
-        <div className="container mx-auto px-6 text-center">
+        {/* Subtle dot texture (like ServicesHero) */}
+        <div
+          className="absolute inset-0 -z-10 md:opacity-30 opacity-20 mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E\")",
+          }}
+          aria-hidden
+        />
+
+        {/* Floating particles */}
+        <div className="pointer-events-none absolute inset-0">
+          {Array.from({ length: 18 }).map((_, i) => {
+            const left = `${Math.random() * 100}%`;
+            const top = `${Math.random() * 100}%`;
+            const duration = 3 + Math.random() * 2;
+            const delay = Math.random() * 2;
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 md:w-1.5 md:h-1.5 bg-primary/30 rounded-full"
+                style={{ left, top }}
+                animate={{ y: [0, -30, 0], opacity: [0.3, 1, 0.3] }}
+                transition={{
+                  duration,
+                  repeat: Infinity,
+                  delay,
+                  ease: "easeInOut",
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Content */}
+        <div className="relative z-10 w-full px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="mx-auto max-w-[900px]"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-tight text-muted-foreground mb-6 px-4">
-              <span className="inline-block md:whitespace-nowrap">
-                Our <span className="text-gradient">Portfolio</span>
-              </span>
+            {/* Eyebrow */}
+            <span
+              className="inline-flex mb-2 items-center gap-2 rounded-full px-3 py-1 text-xs font-medium 
+                       bg-black/5 text-muted-foreground ring-1 ring-foreground/10 backdrop-blur"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+              Portfolio
+            </span>
+
+            {/* Heading (visible, semantic) */}
+            <h1
+              id="portfolio-hero-title"
+              className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground tracking-tight leading-tight mb-4 sm:mb-6"
+            >
+              Our <span className="text-gradient">Portfolio</span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto mb-0 px-4">
+
+            {/* Subcopy */}
+            <p className="mx-auto max-w-[42rem] text-sm sm:text-base md:text-lg text-muted-foreground leading-relaxed">
               Explore our collection of immersive virtual experiences. Each
               project tells a unique story and showcases our commitment to
               excellence.
             </p>
           </motion.div>
         </div>
+
+        {/* Bottom fade */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-96 z-0
+               bg-gradient-to-b from-transparent via-white/55 to-white"
+          aria-hidden
+        />
       </section>
 
       {/* === Filter Categories === */}

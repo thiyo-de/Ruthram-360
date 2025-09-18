@@ -14,6 +14,7 @@ import {
   Check as CheckMini,
   type LucideIcon,
 } from "lucide-react";
+import Contact_BG from "../Assets/contact.jpg";
 
 /** Same-origin endpoint. In dev the Vite proxy forwards to your PHP. */
 const SEND_ENDPOINT = `/api/send-email.php`;
@@ -259,6 +260,18 @@ const ContactPage = () => {
     }));
   };
 
+  const focusFirstError = (errs: Errors) => {
+    const firstKey = (Object.keys(errs) as (keyof FormDataShape)[]).find(
+      (k) => errs[k]
+    );
+    if (!firstKey) return;
+    const el = document.querySelector<HTMLInputElement | HTMLTextAreaElement>(
+      `[name="${firstKey}"]`
+    );
+    el?.focus({ preventScroll: false });
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
+
   /* Copy to clipboard for email/phone */
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const copyText = async (key: string, value: string) => {
@@ -273,6 +286,14 @@ const ContactPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Honeypot — quietly succeed to deter bots
+    if (formData.website) {
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 2500);
+      return;
+    }
+
     const newErrors = validateAll(formData);
     setErrors(newErrors);
     setTouched({
@@ -285,7 +306,10 @@ const ContactPage = () => {
       project: touched.project || false,
       website: true,
     });
-    if (Object.values(newErrors).some(Boolean)) return;
+    if (Object.values(newErrors).some(Boolean)) {
+      focusFirstError(newErrors);
+      return;
+    }
 
     setSending(true);
     setError(null);
@@ -305,11 +329,8 @@ const ContactPage = () => {
       if (raw) {
         try {
           data = JSON.parse(raw) as ApiResponse;
-        } catch (err) {
-          // ignore non-JSON response, safe fallback
-          if (import.meta.env.DEV) {
-            console.warn("Non-JSON response:", raw, err);
-          }
+        } catch {
+          // Non-JSON fallback path (e.g., PHP echo)
         }
       }
 
@@ -371,54 +392,77 @@ const ContactPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b">
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      {/* ===== Hero ===== */}
+      <section
+        className="relative min-h-[50vh] md:min-h-[55vh] flex items-center justify-center overflow-hidden
+             pt-28 md:pt-32 pb-12 md:pb-16"
+        aria-labelledby="contact-hero-title"
+      >
+        {/* Background image */}
+        <div
+          className="absolute inset-0 -z-20 bg-cover bg-center"
+          style={{ backgroundImage: `url(${Contact_BG})` }}
+          aria-hidden
+        />
 
-        .hero-grid {
-          background-image:
-            linear-gradient(to right, rgba(15,23,42,0.04) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(15,23,42,0.04) 1px, transparent 1px);
-          background-size: 48px 48px;
-        }
-
-        @keyframes pulse-soft {
-          0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0.35); }
-          50% { transform: scale(1.03); box-shadow: 0 0 0 12px rgba(16,185,129,0.0); }
-        }
-        .hover-pulse:hover { animation: pulse-soft 1.2s ease-in-out infinite; }
-      `}</style>
-
-      {/* ===== Hero (kept to your style) ===== */}
-      <section className="relative pt-48 pb-24 overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-white/85 backdrop-blur-[6px]" />
-          <div className="absolute inset-0 hero-grid pointer-events-none" />
-          <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-b from-transparent to-white" />
+        {/* Overlay */}
+        <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
+          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          <div className="absolute -inset-8 opacity-40 md:opacity-60 blur-2xl">
+            <div className="absolute -top-24 -left-16 w-[50%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]" />
+            <div className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]" />
+          </div>
         </div>
 
-        <div className="container mx-auto px-6 text-center">
+        {/* Dot texture */}
+        <div
+          className="absolute inset-0 -z-10 md:opacity-30 opacity-20 mix-blend-overlay"
+          style={{
+            backgroundImage:
+              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='%23cccccc' fill-opacity='0.4'%3E%3Ccircle cx='1' cy='1' r='1'/%3E%3C/g%3E%3C/svg%3E\")",
+          }}
+          aria-hidden
+        />
+
+        {/* Content */}
+        <div className="relative z-10 w-full px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="max-w-3xl mx-auto"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-muted-foreground mb-6 px-4">
-              Get In Touch
+            <span className="inline-flex mb-2 items-center gap-2 rounded-full px-3 py-1 text-xs font-medium bg-black/5 text-muted-foreground ring-1 ring-foreground/10 backdrop-blur">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-400" />
+              Contact
+            </span>
+
+            <h1
+              id="contact-hero-title"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-muted-foreground mb-6 px-4"
+            >
+              Get <span className="text-gradient">In Touch</span>
             </h1>
-            <p className="text-lg sm:text-xl text-zinc-600 max-w-3xl mx-auto mb-12 px-4">
+
+            <p className="text-lg sm:text-xl text-zinc-600 max-w-3xl mx-auto px-4">
               Ready to transform your space with immersive virtual experiences?
               Let’s discuss your project and create something amazing together.
             </p>
           </motion.div>
         </div>
+
+        {/* Bottom fade */}
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-96 z-0 bg-gradient-to-b from-transparent via-white/55 to-white"
+          aria-hidden
+        />
       </section>
 
       {/* ===== Content ===== */}
       <section className="pb-24">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-            {/* Left: info -> card with icons + copy actions */}
+            {/* Left info */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -497,7 +541,7 @@ const ContactPage = () => {
               </div>
             </motion.div>
 
-            {/* Right: form with inline validation + loading + success */}
+            {/* Right form */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -515,7 +559,7 @@ const ContactPage = () => {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
                   {/* honeypot */}
                   <input
                     type="text"
@@ -539,6 +583,7 @@ const ContactPage = () => {
                         onChange={setField}
                         onBlur={() => onBlur("name")}
                         required
+                        aria-invalid={!!(touched.name && errors.name)}
                         className={`w-full bg-white text-gray-900 border rounded-lg px-4 py-3 placeholder-gray-500 outline-none transition
                           ${
                             touched.name
@@ -568,6 +613,7 @@ const ContactPage = () => {
                         onChange={setField}
                         onBlur={() => onBlur("email")}
                         required
+                        aria-invalid={!!(touched.email && errors.email)}
                         className={`w-full bg-white text-gray-900 border rounded-lg px-4 py-3 placeholder-gray-500 outline-none transition
                           ${
                             touched.email
@@ -597,6 +643,7 @@ const ContactPage = () => {
                         value={formData.phone}
                         onChange={setField}
                         onBlur={() => onBlur("phone")}
+                        aria-invalid={!!(touched.phone && errors.phone)}
                         className={`w-full bg-white text-gray-900 border rounded-lg px-4 py-3 placeholder-gray-500 outline-none transition
                           ${
                             touched.phone
@@ -663,7 +710,7 @@ const ContactPage = () => {
                     />
                   </div>
 
-                  <div className="pb-24 md:pb-0">
+                  <div>
                     <label className="block text-muted-foreground font-medium mb-2">
                       Project Details *
                     </label>
@@ -674,6 +721,7 @@ const ContactPage = () => {
                       onBlur={() => onBlur("message")}
                       rows={5}
                       required
+                      aria-invalid={!!(touched.message && errors.message)}
                       className={`w-full bg-white text-gray-900 border rounded-lg px-4 py-3 placeholder-gray-500 outline-none transition resize-none
                         ${
                           touched.message
@@ -691,13 +739,13 @@ const ContactPage = () => {
                     )}
                   </div>
 
-                  {/* Desktop/Tablet submit */}
-                  <div className="hidden md:block">
+                  {/* Submit (visible on all breakpoints) */}
+                  <div>
                     <motion.button
                       type="submit"
-                      whileHover={{ scale: sending ? 1 : 1.02 }}
-                      whileTap={{ scale: sending ? 1 : 0.98 }}
-                      disabled={sending}
+                      whileHover={{ scale: sending || isSubmitted ? 1 : 1.02 }}
+                      whileTap={{ scale: sending || isSubmitted ? 1 : 0.98 }}
+                      disabled={sending || isSubmitted}
                       className="w-full btn-primary disabled:opacity-70 flex items-center justify-center gap-2"
                     >
                       {isSubmitted ? (
@@ -728,35 +776,6 @@ const ContactPage = () => {
               </div>
             </motion.div>
           </div>
-        </div>
-
-        {/* Mobile sticky action bar */}
-        <div className="md:hidden fixed inset-x-0 bottom-0 bg-white/90 backdrop-blur border-t border-zinc-200 px-4 py-3">
-          <motion.button
-            type="button"
-            onClick={() => {
-              const form = document.querySelector("form");
-              form?.dispatchEvent(
-                new Event("submit", { cancelable: true, bubbles: true })
-              );
-            }}
-            whileHover={{ scale: sending ? 1 : 1.02 }}
-            whileTap={{ scale: sending ? 1 : 0.98 }}
-            disabled={sending}
-            className="w-full btn-primary disabled:opacity-70 flex items-center justify-center gap-2"
-          >
-            {isSubmitted ? (
-              <>
-                <CheckCircle size={20} />
-                <span>Message Sent!</span>
-              </>
-            ) : (
-              <>
-                <Send size={20} />
-                <span>{sending ? "Sending..." : "Send Message"}</span>
-              </>
-            )}
-          </motion.button>
         </div>
       </section>
     </div>

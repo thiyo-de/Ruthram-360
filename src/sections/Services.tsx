@@ -26,7 +26,11 @@ type SectionTitleProps = {
   className?: string;
 };
 
-const SectionTitle = ({ prefix, highlight, className = "" }: SectionTitleProps) => {
+const SectionTitle = ({
+  prefix,
+  highlight,
+  className = "",
+}: SectionTitleProps) => {
   return (
     <div className={`text-center ${className ?? ""}`}>
       <div className="flex items-center justify-center gap-3">
@@ -44,7 +48,9 @@ const SectionTitle = ({ prefix, highlight, className = "" }: SectionTitleProps) 
         </motion.div>
 
         <h2 className="font-heading font-bold tracking-tight leading-none flex items-center text-[22px] sm:text-3xl md:text-4xl lg:text-5xl text-foreground">
-          {prefix ? <span className="mr-2 text-muted-foreground">{prefix}</span> : null}
+          {prefix ? (
+            <span className="mr-2 text-muted-foreground">{prefix}</span>
+          ) : null}
           <span className="text-gradient">{highlight}</span>
         </h2>
 
@@ -92,7 +98,11 @@ const Services = () => {
       title: "360 Degree 3D Tour",
       description:
         "Immersive 360° 3D virtual tours with a real sense of presence and smooth navigation.",
-      features: ["Immersive 3D Experience", "Interactive Navigation", "Boosts Engagement"],
+      features: [
+        "Immersive 3D Experience",
+        "Interactive Navigation",
+        "Boosts Engagement",
+      ],
     },
     {
       icon: Route,
@@ -113,21 +123,36 @@ const Services = () => {
       title: "360° Aerial Video (Drone)",
       description:
         "Showcase scale, routes, and surroundings with breathtaking 360° motion footage.",
-      features: ["Planned & Compliant Flights", "Cinematic Paths", "5.7K Exports"],
+      features: [
+        "Planned & Compliant Flights",
+        "Cinematic Paths",
+        "5.7K Exports",
+      ],
     },
     {
       icon: Video,
       title: "360° Videography & Immersive",
       description:
         "Walk-through 360° videos with interactive hotspots, chapters, and CTAs.",
-      features: ["Stabilized Motion", "Interactive Overlays", "YouTube/Meta VR Ready"],
+      features: [
+        "Stabilized Motion",
+        "Interactive Overlays",
+        "YouTube/Meta VR Ready",
+      ],
     },
   ];
 
   return (
-    <section id="services" className="py-20 sm:py-24 bg-background scroll-mt-20">
+    <section
+      id="services"
+      className="py-20 sm:py-24 bg-background scroll-mt-20"
+    >
       <div className="container mx-auto px-6">
-        <SectionTitle prefix="Our" highlight="Services" className="mb-12 sm:mb-16" />
+        <SectionTitle
+          prefix="Our"
+          highlight="Services"
+          className="mb-12 sm:mb-16"
+        />
 
         <motion.div
           variants={containerVariants}
@@ -167,9 +192,14 @@ const Services = () => {
 
               <ul className="relative space-y-2">
                 {service.features.map((feature, i) => (
-                  <li key={`${service.title}-f-${i}`} className="flex items-center gap-2">
+                  <li
+                    key={`${service.title}-f-${i}`}
+                    className="flex items-center gap-2"
+                  >
                     <span className="inline-block w-1.5 h-1.5 rounded-full bg-primary" />
-                    <span className="text-sm text-muted-foreground">{feature}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>

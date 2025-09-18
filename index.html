@@ -2,51 +2,89 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="shortcut icon" href="./src/Assets/Logo.svg" type="image/svg" />
-    <title>Ruthram360°</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+
+    <!-- Favicon & App Icons (place these files in /public) -->
+    <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0f172a" />
+
+    <!-- Primary SEO -->
+    <title>Ruthram360° | Virtual Tours & Google Street View</title>
+    <link rel="canonical" href="https://ruthram360.com/" />
     <meta
       name="description"
-      content="Professional Virtual Tour and Google Street View services. Immersive 360° experiences for businesses, real estate, and more."
+      content="Immersive 360° Virtual Tours, 3D Tours, and Google Street View for campuses, hospitals, hotels, and businesses. Increase trust and conversions with interactive experiences."
     />
-    
-    <!-- Fonts -->
-    <!-- Space Grotesk for Headings -->
+    <meta name="robots" content="index,follow" />
+    <!-- (Optional) modern engines largely ignore keywords, but safe to keep -->
+    <meta
+      name="keywords"
+      content="Virtual Tours, 360 Photography, 3D Tour, Google Street View, Campus Virtual Tour, Ruthram360"
+    />
+    <meta name="author" content="Ruthram360" />
+
+    <!-- Fonts (keep as-is) -->
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Satoshi for Subtitles & Info -->
     <link
       rel="stylesheet"
       href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap"
     />
 
-    <meta name="author" content="Lovable" />
-
     <!-- Open Graph -->
+    <meta property="og:title" content="Ruthram360° | Virtual Tours & Google Street View" />
     <meta
-      property="og:title"
-      content="b33d8fa9-9f40-4978-b6ec-ada941417f59"
+      property="og:description"
+      content="Transform your place into an immersive 360° experience. Trusted virtual tours for institutions and businesses."
     />
-    <meta property="og:description" content="Lovable Generated Project" />
     <meta property="og:type" content="website" />
-    <meta
-      property="og:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
-    />
+    <meta property="og:url" content="https://ruthram360.com/" />
+    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:title" content="Ruthram360° | Virtual Tours & Google Street View" />
     <meta
-      name="twitter:image"
-      content="https://lovable.dev/opengraph-image-p98pqg.png"
+      name="twitter:description"
+      content="Transform your place into an immersive 360° experience. Trusted virtual tours for institutions and businesses."
     />
+    <meta name="twitter:image" content="/og-image.jpg" />
+
+    <!-- JSON-LD (Organization) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Ruthram360",
+      "url": "https://ruthram360.com/",
+      "logo": "https://ruthram360.com/Logo.svg",
+      "sameAs": []
+    }
+    </script>
+
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      /* SPA: we'll send page_view manually in Analytics.tsx */
+      gtag('config', 'G-XXXXXXX', { send_page_view: false });
+    </script>
   </head>
 
   <body>
+    <noscript>JavaScript is required to run this site.</noscript>
     <div id="root"></div>
+    <!-- Vite entry: keep this -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

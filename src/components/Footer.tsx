@@ -15,7 +15,11 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Linkedin, href: "https://www.linkedin.com/in/Ruthram360/", label: "LinkedIn" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/Ruthram360/",
+      label: "LinkedIn",
+    },
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Instagram, href: "#", label: "Instagram" },
   ];
@@ -65,7 +69,9 @@ const Footer = () => {
                         to={link.path}
                         aria-current={active ? "page" : undefined}
                         className={`inline-flex items-center gap-2 transition-colors ${
-                          active ? "text-white" : "text-white/90 hover:text-white"
+                          active
+                            ? "text-white"
+                            : "text-white/90 hover:text-white"
                         }`}
                       >
                         <span
@@ -90,7 +96,11 @@ const Footer = () => {
               </h3>
               <ul className="space-y-3">
                 <li className="flex items-start gap-3 text-white/90">
-                  <Mail size={18} className="opacity-90 shrink-0 mt-0.5" aria-hidden="true" />
+                  <Mail
+                    size={18}
+                    className="opacity-90 shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
                   <a
                     href="mailto:mktg@ruthram360.com"
                     className="leading-tight break-words hover:text-white transition-colors"
@@ -117,7 +127,11 @@ const Footer = () => {
                       aria-label={s.label}
                       className="flex items-center justify-center size-10 rounded-full bg-white/15 border border-white/20 hover:bg-white/25 transition-colors"
                     >
-                      <s.icon size={18} className="text-white opacity-90" aria-hidden="true" />
+                      <s.icon
+                        size={18}
+                        className="text-white opacity-90"
+                        aria-hidden="true"
+                      />
                     </a>
                   </li>
                 ))}
@@ -141,13 +155,22 @@ const Footer = () => {
             © {new Date().getFullYear()} Ruthram360. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm">
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
               Privacy Policy
             </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
               Terms of Service
             </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
               Cookie Policy
             </a>
           </div>

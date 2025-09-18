@@ -159,7 +159,7 @@ const Hero = () => {
                     "font-heading heading-hero tracking-tight leading-none font-black",
                     ["Premium", "Virtual"].includes(word)
                       ? "text-gradient"
-                      : "text-muted-foreground"
+                      : "text-muted-foreground",
                   ].join(" ")}
                 >
                   {word}
