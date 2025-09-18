@@ -42,7 +42,7 @@ import AU1 from "../Assets/AU.jpg";
 import V_Hotel from "../Assets/Vijayrani Hotel.avif";
 import MSU1 from "../Assets/MSU.jpg";
 import PU from "../Assets/PU.jpg";
-import MTCG from "../Assets/MTCG.avif";
+import MTCG from "../Assets/MTCG.webp";
 import PMUST from "../Assets/PMUST.jpg";
 import MITCAT from "../Assets/MITCAT.jpg";
 import SONACT from "../Assets/SONACT.jpg";
@@ -58,11 +58,11 @@ import SKMC from "../Assets/SKMC.jpg";
 import TPS1 from "../Assets/TPS1.avif";
 import TPS2 from "../Assets/TPS2.avif";
 import AU_Museum from "../Assets/Vallal Dr. Alagappar Museum.jpg";
-import Anandam from "../Assets/anadam.jpg";
+import Anandam from "../Assets/anadam.png";
 import Chola from "../Assets/Chola.png";
 import KRCE1 from "../Assets/KRCE1.jpg";
 import KRCT1 from "../Assets/krct1.jpeg";
-import MIET1 from "../Assets/MIET1.png";
+import MIET1 from "../Assets/MIET1.jpg";
 import MG1 from "../Assets/MG.png";
 import MITP from "../Assets/MITP.jpg";
 import PMP from "../Assets/PMP.jpg";
@@ -136,40 +136,44 @@ const Marquee = ({
   speedPxPerSec?: number;
 }) => {
   const trackRef = useRef<HTMLDivElement | null>(null);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
 
+  // Respect prefers-reduced-motion
   useEffect(() => {
     const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
-    const onChange = () => setReduceMotion(Boolean(mq?.matches));
-    onChange();
-    mq?.addEventListener?.("change", onChange);
-    return () => mq?.removeEventListener?.("change", onChange);
+    const set = () => setReduceMotion(Boolean(mq?.matches));
+    set();
+    mq?.addEventListener?.("change", set);
+    return () => mq?.removeEventListener?.("change", set);
   }, []);
 
+  // Compute duration from content width
   useEffect(() => {
-    const el = trackRef.current;
-    if (!el) return;
+    if (!trackRef.current) return;
 
+    const el = trackRef.current;
     const calc = () => {
-      const loopWidth = el.scrollWidth / 2; // duplicated content
-      const duration = Math.max(10, Math.round(loopWidth / speedPxPerSec));
-      el.style.setProperty("--marquee-duration", `${duration}s`);
+      // Because we duplicate content, half of scrollWidth is one full loop
+      const loopWidth = el.scrollWidth / 2;
+      const durationSec = Math.max(10, Math.round(loopWidth / speedPxPerSec));
+      el.style.setProperty("--marquee-duration", `${durationSec}s`);
     };
 
+    // Recalc on resize and when images load
     const onResize = () => calc();
     window.addEventListener("resize", onResize);
 
-    // Recalc when images load
     const imgs = Array.from(el.querySelectorAll("img"));
-    const removers: Array<() => void> = [];
+    const unsubs: Array<() => void> = [];
     imgs.forEach((img) => {
       if (img.complete) return;
       const onLoad = () => calc();
       const onError = () => calc();
       img.addEventListener("load", onLoad, { once: true });
       img.addEventListener("error", onError, { once: true });
-      removers.push(() => {
+      unsubs.push(() => {
         img.removeEventListener("load", onLoad);
         img.removeEventListener("error", onError);
       });
@@ -179,42 +183,52 @@ const Marquee = ({
     ro.observe(el);
 
     calc();
-
     return () => {
       window.removeEventListener("resize", onResize);
       ro.disconnect();
-      removers.forEach((off) => off());
+      unsubs.forEach((u) => u());
     };
   }, [items, speedPxPerSec]);
 
+  // Touch toggle for pause (since :hover is unreliable on mobile)
+  const handleTouchToggle = () => setIsPaused((p) => !p);
+
   return (
     <div
-      className="relative overflow-hidden"
+      ref={wrapperRef}
+      className="relative w-full overflow-hidden"
       aria-label="Client logos carousel"
       role="region"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchToggle}
     >
+      {/* Edge fades */}
       <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-white to-transparent" />
 
+      {/* When reduced motion is requested, turn off animation and allow manual scroll */}
       <div
         ref={trackRef}
         className={[
           "flex w-max gap-8 sm:gap-12 py-4",
-          reduceMotion
-            ? ""
-            : "animate-[marquee_var(--marquee-duration)_linear_infinite] will-change-transform",
-          isPaused
-            ? "[animation-play-state:paused]"
-            : "[animation-play-state:running]",
+          reduceMotion ? "overflow-x-auto no-scrollbar" : "",
         ].join(" ")}
+        style={
+          reduceMotion
+            ? undefined
+            : {
+                animation: `marquee var(--marquee-duration) linear infinite`,
+                animationPlayState: isPaused ? "paused" : "running",
+                willChange: "transform",
+              }
+        }
       >
-        {[0, 1].map((copyIndex) => (
-          <div key={copyIndex} className="flex gap-8 sm:gap-12">
+        {[0, 1].map((copy) => (
+          <div key={copy} className="flex gap-8 sm:gap-12">
             {items.map((client, i) => (
               <div
-                key={`${client.name}-${copyIndex}-${i}`}
+                key={`${client.name}-${copy}-${i}`}
                 className="w-[140px] sm:w-[160px]"
               >
                 <div className={`rounded-2xl ${cardClass}`}>
@@ -241,17 +255,20 @@ const Marquee = ({
         ))}
       </div>
 
+      {/* Keyframes (translate3d for GPU) */}
       <style>{`
         @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+          0% { transform: translate3d(0,0,0); }
+          100% { transform: translate3d(-50%,0,0); }
         }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>
   );
 };
-
 /* -------------------- Project Modal (WHITE bg, NO shadow, modern) -------------------- */
+
 const ProjectModal = ({
   project,
   onClose,
@@ -260,21 +277,76 @@ const ProjectModal = ({
   onClose: () => void;
 }) => {
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [copied, setCopied] = useState(false);
 
+  /* Lock body, esc to close, and focus scroll region so trackpad/keys work */
   useEffect(() => {
     if (!project) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    const prev = document.body.style.overflow;
+    const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
-    const t = setTimeout(() => closeRef.current?.focus(), 0);
+
+    const t = setTimeout(() => {
+      scrollRef.current?.focus();
+    }, 0);
+
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prev;
+      document.body.style.overflow = prevOverflow;
       clearTimeout(t);
     };
   }, [project, onClose]);
+
+  /* Route wheel/touch to the modal (no-explicit-any safe) */
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel: EventListener = (ev) => {
+      const e = ev as WheelEvent;
+      const canScroll =
+        el.scrollHeight > el.clientHeight &&
+        ((e.deltaY < 0 && el.scrollTop > 0) ||
+          (e.deltaY > 0 && el.scrollTop + el.clientHeight < el.scrollHeight));
+
+      if (canScroll) {
+        e.preventDefault();
+        el.scrollTop += e.deltaY;
+      }
+    };
+
+    let startY = 0;
+    const onTouchStart: EventListener = (ev) => {
+      const e = ev as TouchEvent;
+      startY = e.touches[0]?.clientY ?? 0;
+    };
+    const onTouchMove: EventListener = (ev) => {
+      const e = ev as TouchEvent;
+      const currentY = e.touches[0]?.clientY ?? 0;
+      const deltaY = startY - currentY;
+
+      const canScroll =
+        el.scrollHeight > el.clientHeight &&
+        ((deltaY < 0 && el.scrollTop > 0) ||
+          (deltaY > 0 && el.scrollTop + el.clientHeight < el.scrollHeight));
+
+      if (!canScroll) {
+        e.preventDefault(); // stop background/bounce scroll
+      }
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+    };
+  }, [project]);
 
   if (!project) return null;
 
@@ -285,13 +357,12 @@ const ProjectModal = ({
   const canOpen = Boolean(project.url);
 
   const handleShare = async () => {
-    if (!project.url) return;
+    if (!project?.url) return;
     try {
       await navigator.clipboard.writeText(project.url);
       setCopied(true);
       setTimeout(() => setCopied(false), 1600);
     } catch {
-      // Fallback for older browsers
       const ta = document.createElement("textarea");
       ta.value = project.url;
       ta.style.position = "fixed";
@@ -347,8 +418,17 @@ const ProjectModal = ({
             </button>
           </div>
 
-          {/* Body (scrollable; scrollbar hidden) */}
-          <div className="px-6 pb-6 pt-4 max-h-[80vh] overscroll-contain overflow-y-auto no-scrollbar">
+          {/* Body (scrollable; trackpad/touch friendly) */}
+          <div
+            ref={scrollRef}
+            className="px-6 pb-6 pt-4 max-h-[80vh] overflow-y-auto no-scrollbar focus:outline-none"
+            tabIndex={0}
+            style={{
+              WebkitOverflowScrolling: "touch",
+              overscrollBehavior: "contain",
+              touchAction: "pan-y",
+            }}
+          >
             <div className="relative overflow-hidden rounded-xl mb-5 aspect-video border border-neutral-200 bg-neutral-50">
               <img
                 src={project.image}
@@ -456,7 +536,7 @@ const ProjectModal = ({
           )}
         </AnimatePresence>
 
-        {/* Hide scrollbar utility (scoped; no plugin required) */}
+        {/* local utility */}
         <style>{`
           .no-scrollbar::-webkit-scrollbar { display: none; }
           .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -785,7 +865,7 @@ const PortfolioPage = () => {
         features: ["Layer View", "Smooth Nav", "Live Track"],
         client: "Anandam Nagar",
         completedDate: "September 2024",
-        url: "https://maps.app.goo.gl/SuhSh2GwTWZ5n1mg8",
+        url: "https://maps.app.goo.gl/3tLUg4KezmWM1QjA9",
       },
       {
         id: 26,
@@ -989,6 +1069,8 @@ const PortfolioPage = () => {
     ? filteredProjects.slice(0, VISIBLE_LIMIT)
     : filteredProjects;
 
+  const hasMore = filteredProjects.length > VISIBLE_LIMIT;
+
   return (
     <div className="min-h-screen">
       {/* Hero */}
@@ -1089,6 +1171,7 @@ const PortfolioPage = () => {
       </section>
 
       {/* === Portfolio Grid (Cards) === */}
+      {/* === Portfolio Grid (Cards) === */}
       <section className="pb-24">
         <div className="container mx-auto px-6">
           <motion.div
@@ -1157,6 +1240,27 @@ const PortfolioPage = () => {
               ))}
             </AnimatePresence>
           </motion.div>
+
+          {/* View more / Show less button */}
+          {hasMore && (
+            <div className="mt-10 flex justify-center">
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={() => setShowAll((v) => !v)}
+                aria-expanded={showAll}
+                className={`px-6 py-3 rounded-full font-medium transition
+            ${
+              showAll
+                ? "border border-neutral-300 text-muted-foreground bg-white hover:border-primary/50"
+                : "bg-gradient-to-r from-primary to-orange-500 text-white shadow-md"
+            }`}
+              >
+                {showAll ? "Show Less" : "View More"}
+              </motion.button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -1164,6 +1268,8 @@ const PortfolioPage = () => {
 
       {/* Our Clients */}
       {/* === Clients Section === */}
+
+      {/* === Clients Section (Testimonial Logos) === */}
       <section className="py-24 bg-white">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
@@ -1171,6 +1277,9 @@ const PortfolioPage = () => {
               Trusted By{" "}
               <span className="text-gradient">Leading Institutions</span>
             </h2>
+            <p className="mt-3 text-sm sm:text-base text-muted-foreground/80">
+              (Tip: Tap once on mobile to pause / resume)
+            </p>
           </div>
 
           <Marquee

@@ -97,7 +97,7 @@ const Hero = () => {
 
       {/* Animated gradient waves overlay */}
       <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/80 to-white/90 mix-blend-normal" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/90 to-white/90 mix-blend-normal" />
         {/* gentle wave using radial gradients */}
         <div className="absolute -inset-8 opacity-60 blur-2xl">
           <div className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]" />
@@ -277,8 +277,8 @@ const Hero = () => {
 
       {/* Bottom fade overlay */}
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-20 sm:h-24 md:h-32 z-0
-                   bg-gradient-to-b from-transparent via-white/80 to-white"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-60 z-0
+                   bg-gradient-to-b from-transparent via-white/50 to-white"
         aria-hidden
       />
 

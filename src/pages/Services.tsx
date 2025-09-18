@@ -686,7 +686,7 @@ const Services = () => {
           {/* Base image */}
           <img
             src=""
-            alt="Abstract service background"
+            alt=""
             className="absolute inset-0 w-full h-full object-cover"
             loading="eager"
             decoding="async"

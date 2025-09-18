@@ -15,7 +15,7 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Linkedin, href: "https://www.linkedin.com/in/Ruthram360/", label: "LinkedIn" },
     { icon: Facebook, href: "#", label: "Facebook" },
     { icon: Instagram, href: "#", label: "Instagram" },
   ];
