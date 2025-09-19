@@ -279,7 +279,7 @@ function ServicesHero() {
     >
       {/* Background image */}
       <div
-        className="absolute inset-0 -z-20 bg-cover bg-center"
+        className="absolute inset-0 bottom-0 -z-20 bg-cover bg-center"
         // tip: adjust position to keep subject clear of the strongest overlay area
         // className="absolute inset-0 -z-20 bg-cover bg-[position:50%_30%]"
         style={{ backgroundImage: `url(${Service_BG})` }}
