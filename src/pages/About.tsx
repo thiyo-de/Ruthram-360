@@ -73,7 +73,7 @@ const AboutPage = () => {
 
         {/* Blur + soft white veil + subtle blobs */}
         <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" />
           <div className="absolute -inset-8 md:opacity-60 opacity-40 blur-2xl">
             <div
               className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full

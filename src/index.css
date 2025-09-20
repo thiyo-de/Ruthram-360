@@ -219,6 +219,6 @@
     @apply relative;
     background: hsl(0 0% 100% / 0.15);
     -webkit-backdrop-filter: blur(var(--glass-blur, 24px));
-    backdrop-filter: blur(var(--glass-blur, 4px)); /* default = 24px */
+    backdrop-filter: blur(var(--glass-blur, 2px)); /* default = 24px */
   }
 }

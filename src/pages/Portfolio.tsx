@@ -1090,7 +1090,7 @@ const PortfolioPage = () => {
 
         {/* Blur + overlay (light, readable) */}
         <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" />
           {/* Gradient blobs (subtle) */}
           <div className="absolute -inset-8 md:opacity-60 opacity-40 blur-2xl">
             <div

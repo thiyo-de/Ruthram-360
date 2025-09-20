@@ -407,7 +407,7 @@ const ContactPage = () => {
 
         {/* Overlay */}
         <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
-          <div className="absolute inset-0 bg-white/60 backdrop-blur-[3px]" />
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px]" />
           <div className="absolute -inset-8 opacity-40 md:opacity-60 blur-2xl">
             <div className="absolute -top-24 -left-16 w-[50%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]" />
             <div className="absolute -bottom-24 -right-16 w-[55%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.amber.400/.2),transparent_60%)]" />

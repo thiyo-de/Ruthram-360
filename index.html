@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
+    <!-- Basics -->
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-
-    <!-- Favicon & App Icons (place these files in /public) -->
-    <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#0f172a" />
+    <meta name="robots" content="index,follow" />
+
+    <!-- Icons (put these files in /public) -->
+    <link rel="icon" type="image/svg+xml" href="/Logo.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- Primary SEO -->
     <title>Ruthram360° | Virtual Tours & Google Street View</title>
@@ -19,15 +19,15 @@
       name="description"
       content="Immersive 360° Virtual Tours, 3D Tours, and Google Street View for campuses, hospitals, hotels, and businesses. Increase trust and conversions with interactive experiences."
     />
-    <meta name="robots" content="index,follow" />
-    <!-- (Optional) modern engines largely ignore keywords, but safe to keep -->
     <meta
       name="keywords"
       content="Virtual Tours, 360 Photography, 3D Tour, Google Street View, Campus Virtual Tour, Ruthram360"
     />
     <meta name="author" content="Ruthram360" />
 
-    <!-- Fonts (keep as-is) -->
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -45,7 +45,7 @@
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ruthram360.com/" />
-    <meta property="og:image" content="/og-image.jpg" />
+    <meta property="og:image" content="https://ruthram360.com/og-image.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
@@ -56,35 +56,36 @@
       name="twitter:description"
       content="Transform your place into an immersive 360° experience. Trusted virtual tours for institutions and businesses."
     />
-    <meta name="twitter:image" content="/og-image.jpg" />
+    <meta name="twitter:image" content="https://ruthram360.com/og-image.jpg" />
 
     <!-- JSON-LD (Organization) -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Ruthram360",
-      "url": "https://ruthram360.com/",
-      "logo": "https://ruthram360.com/Logo.svg",
-      "sameAs": []
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Ruthram360",
+        "url": "https://ruthram360.com/",
+        "logo": "https://ruthram360.com/Logo.svg",
+        "sameAs": []
+      }
     </script>
 
-    <!-- Google Analytics (GA4) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXX"></script>
+    <!-- ✅ Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MWHSHLQF4B"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){ dataLayer.push(arguments); }
+      function gtag(){ window.dataLayer.push(arguments); }
+      window.gtag = gtag;
       gtag('js', new Date());
-      /* SPA: we'll send page_view manually in Analytics.tsx */
-      gtag('config', 'G-XXXXXXX', { send_page_view: false });
+      gtag('config', 'G-MWHSHLQF4B', { send_page_view: false }); /* SPA: manual page views */
     </script>
   </head>
 
   <body>
     <noscript>JavaScript is required to run this site.</noscript>
     <div id="root"></div>
-    <!-- Vite entry: keep this -->
+
+    <!-- Vite dev entry (in production, built assets replace this automatically) -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -96,8 +96,8 @@ const Hero = () => {
       />
 
       {/* Animated gradient waves overlay */}
-      <div className="absolute inset-0 -z-10 pointer-events-none" aria-hidden>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/90 via-white/90 to-white/90 mix-blend-normal" />
+      <div className="absolute inset-0 -z-10 glass-prism-bg pointer-events-none" aria-hidden>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-white/70 to-white/70 mix-blend-normal" />
         {/* gentle wave using radial gradients */}
         <div className="absolute -inset-8 opacity-60 blur-2xl">
           <div className="absolute -top-20 -left-20 w-[50%] aspect-square rounded-full bg-[radial-gradient(ellipse_at_center,theme(colors.orange.300/.25),transparent_60%)]" />

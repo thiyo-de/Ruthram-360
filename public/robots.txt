@@ -1,3 +1,4 @@
+# ✅ Allow major crawlers
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +11,9 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# ✅ All others
 User-agent: *
 Allow: /
+
+# ✅ Point to sitemap
+Sitemap: https://ruthram360.com/sitemap.xml
